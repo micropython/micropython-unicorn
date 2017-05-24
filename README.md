@@ -7,3 +7,5 @@ port of MicroPython to that virtual microcontroller.  Unicorn has a JavaScript
 version, unicorn.js, which is obtained by running Emscripten on the C version
 of Unicorn, and allows the virtual microcontroller to run in the browser.  This
 then gives a full MicroPython port running simulated-bare-metal in a web browser.
+
+For a running demo please visit https://micropython.org/unicorn
