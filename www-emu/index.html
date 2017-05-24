@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <link rel="stylesheet" href="xterm.css" />
+    </head>
+    <body>
+      <div id="terminal"></div>
+      <p>Clock Speed <ins id="clock_speed"></ins> MHz</p>
+      <p>
+        Binary:
+        <select id="binary">
+          <option value="../unicorn/build/firmware.bin">Minimal</option>
+        <select>
+      </p>
+      <script src="xterm.js"></script>
+      <script>
+      	var term = new Terminal();
+        term.open(document.getElementById('terminal'), true);
+      </script>
+      <script src="unicorn-arm.min.js"></script>
+      <script src="mp_unicorn.js"></script>
+    </body>
+  </html>
