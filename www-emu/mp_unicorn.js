@@ -114,11 +114,11 @@ button.addEventListener("click", function() {
 
 gauge = setInterval(function() {
     if (!window.cycles) {
-        clearInterval(gauge);
-        return;
+        speed = 0;
+    } else {
+        new_timestamp = new Date();
+        speed = (cycles * CYCLE_LIMIT / 1000000) / ((new_timestamp - timestamp) / 1000);
     }
-    new_timestamp = new Date();
-    speed = (cycles * CYCLE_LIMIT / 1000000) / ((new_timestamp - timestamp) / 1000);
     document.getElementById("clock_speed").innerHTML = speed.toFixed(2);
     timestamp = new_timestamp;
     cycles = 0;
