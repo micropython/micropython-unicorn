@@ -26,10 +26,23 @@ int main(int argc, char **argv) {
     int stack_dummy;
     stack_top = (char*)&stack_dummy;
 
-    gc_init(heap, heap + sizeof(heap));
-    mp_init();
-    pyexec_friendly_repl();
-    mp_deinit();
+    while(true){
+        gc_init(heap, heap + sizeof(heap));
+        mp_init();
+        for (;;) {
+            if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
+                if (pyexec_raw_repl() != 0) {
+                    break;
+                }
+            } else {
+                if (pyexec_friendly_repl() != 0) {
+                    break;
+                }
+            }
+        }
+        mp_deinit();
+        printf("PYB: soft reboot\n");
+    }
     return 0;
 }
 
