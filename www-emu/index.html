@@ -11,6 +11,19 @@
         <select id="binary">
           <option value="firmware.bin">Minimal</option>
         <select>
+        Ram Size:
+        <select id="ram_size">
+          <option value=32768>32KB</option>
+          <option value=65536 selected>64KB</option>
+          <option value=131072>128KB</option>
+          <option value=262144>256KB</option>
+        <select>
+        Stack Size:
+        <select id="stack_size">
+          <option value=4096>4KB</option>
+          <option value=8192 selected>8KB</option>
+          <option value=16384>16KB</option>
+        <select>
       </p>
       <script src="xterm.js"></script>
       <script>

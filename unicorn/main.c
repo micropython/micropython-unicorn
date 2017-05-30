@@ -15,19 +15,23 @@ typedef struct _unicorn_controller_t {
     volatile uint32_t PENDING;
     volatile uint32_t EXCEPTION;
     volatile uint32_t INTR_CHAR;
+    volatile uint32_t RAM_SIZE;
+    volatile uint32_t STACK_SIZE;
 } unicorn_controller_t;
 
 #define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
 
 static char *stack_top;
-static char heap[48 * 1024];
 
 int main(int argc, char **argv) {
     int stack_dummy;
     stack_top = (char*)&stack_dummy;
 
-    while(true){
-        gc_init(heap, heap + sizeof(heap));
+    extern uint32_t _ebss;
+    extern uint32_t _sdata;
+
+    while (true) {
+        gc_init(&_ebss, (uint8_t*)&_sdata + UNICORN_CONTROLLER->RAM_SIZE - UNICORN_CONTROLLER->STACK_SIZE);
         mp_init();
         for (;;) {
             if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
@@ -85,12 +89,13 @@ void MP_WEAK __assert_func(const char *file, int line, const char *func, const c
 
 // this is a minimal IRQ and reset framework for any Cortex-M CPU
 
-extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
+extern uint32_t _sidata, _sdata, _edata, _sbss, _ebss;
 
 void Reset_Handler(void) __attribute__((naked));
 void Reset_Handler(void) {
     // set stack pointer
-    __asm volatile ("ldr sp, =_estack");
+    __asm volatile ("ldr r0, =0x08000000");
+    __asm volatile ("ldr sp, [r0]");
     // copy .data section from flash to RAM
     for (uint32_t *src = &_sidata, *dest = &_sdata; dest < &_edata;) {
         *dest++ = *src++;
@@ -115,7 +120,7 @@ void Default_Handler(void) {
 }
 
 const uint32_t isr_vector[] __attribute__((section(".isr_vector"))) = {
-    (uint32_t)&_estack,
+    0, // will be set dynamically
     (uint32_t)&Reset_Handler,
     (uint32_t)&Default_Handler, // NMI_Handler
     (uint32_t)&Default_Handler, // HardFault_Handler

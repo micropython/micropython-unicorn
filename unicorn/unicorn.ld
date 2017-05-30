@@ -6,11 +6,12 @@
 MEMORY
 {
     FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 1M
-    RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 64K
+    RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 64K /* the length is dynamically configured */
 }
  
 /* top end of the stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);
+/* this is dynamically configured and the correct value is at 0x08000000 */
+/* _estack = ORIGIN(RAM) + LENGTH(RAM); */
 
 /* define output sections */
 SECTIONS
