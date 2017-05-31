@@ -21,7 +21,7 @@ INC += -I.
 INC += -I$(TOP)
 INC += -I$(BUILD)
 
-CFLAGS_CORTEX_M4 = -mthumb -mtune=cortex-m4 -mabi=aapcs-linux -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -fsingle-precision-constant -Wdouble-promotion
+CFLAGS_CORTEX_M4 = -mthumb -mtune=cortex-m4 -mcpu=cortex-m4 -mfloat-abi=soft -fsingle-precision-constant -Wdouble-promotion
 CFLAGS = $(INC) -Wall -Werror -std=c99 -nostdlib $(CFLAGS_CORTEX_M4) $(COPT)
 CFLAGS += -DMP_CONFIGFILE="<mpconfigport_$(CONFIG).h>"
 
@@ -33,7 +33,7 @@ CFLAGS += -Os -DNDEBUG
 endif
 
 LDFLAGS = -nostdlib -T unicorn.ld -Map=$@.map --cref
-LIBS =
+LIBS = $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
 SRC_C = \
 	main.c \
