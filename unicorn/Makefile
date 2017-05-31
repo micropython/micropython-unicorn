@@ -35,6 +35,10 @@ endif
 LDFLAGS = -nostdlib -T unicorn.ld -Map=$@.map --cref
 LIBS = $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
+# Remove uncalled code from the final image.
+CFLAGS += -fdata-sections -ffunction-sections
+LDFLAGS += --gc-sections
+
 SRC_C = \
 	main.c \
 	uart.c \
