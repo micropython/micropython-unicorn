@@ -50,17 +50,25 @@ SRC_C = \
 	lib/libm/fmodf.c \
 	lib/libm/nearbyintf.c \
 	lib/libm/ef_sqrt.c \
+	lib/libm/log1pf.c \
+	lib/libm/acoshf.c \
+	lib/libm/asinhf.c \
+	lib/libm/atanhf.c \
 	lib/libm/kf_rem_pio2.c \
 	lib/libm/kf_sin.c \
 	lib/libm/kf_cos.c \
 	lib/libm/kf_tan.c \
 	lib/libm/ef_rem_pio2.c \
+	lib/libm/erf_lgamma.c \
 	lib/libm/sf_sin.c \
 	lib/libm/sf_cos.c \
 	lib/libm/sf_tan.c \
 	lib/libm/sf_frexp.c \
 	lib/libm/sf_modf.c \
 	lib/libm/sf_ldexp.c \
+	lib/libm/sf_erf.c \
+	lib/libm/wf_lgamma.c \
+	lib/libm/wf_tgamma.c \
 	lib/libm/asinfacosf.c \
 	lib/libm/atanf.c \
 	lib/libm/atan2f.c \
