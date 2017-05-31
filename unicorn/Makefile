@@ -46,6 +46,24 @@ SRC_C = \
 	lib/utils/interrupt_char.c \
 	lib/utils/pyexec.c \
 	lib/libc/string0.c \
+	lib/libm/math.c \
+	lib/libm/fmodf.c \
+	lib/libm/nearbyintf.c \
+	lib/libm/ef_sqrt.c \
+	lib/libm/kf_rem_pio2.c \
+	lib/libm/kf_sin.c \
+	lib/libm/kf_cos.c \
+	lib/libm/kf_tan.c \
+	lib/libm/ef_rem_pio2.c \
+	lib/libm/sf_sin.c \
+	lib/libm/sf_cos.c \
+	lib/libm/sf_tan.c \
+	lib/libm/sf_frexp.c \
+	lib/libm/sf_modf.c \
+	lib/libm/sf_ldexp.c \
+	lib/libm/asinfacosf.c \
+	lib/libm/atanf.c \
+	lib/libm/atan2f.c \
 	lib/mp-readline/readline.c \
 
 OBJ = $(PY_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
