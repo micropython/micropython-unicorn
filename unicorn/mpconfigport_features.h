@@ -15,6 +15,9 @@
 #define MICROPY_PY_BUILTINS_SLICE           (1)
 #define MICROPY_PY_BUILTINS_PROPERTY        (1)
 #define MICROPY_PY_BUILTINS_MIN_MAX         (1)
+#define MICROPY_PY_BUILTINS_HELP            (1)
+#define MICROPY_PY_BUILTINS_HELP_TEXT       unicorn_help_text
+#define MICROPY_PY_BUILTINS_HELP_MODULES    (1)
 #define MICROPY_PY_GC                       (1)
 #define MICROPY_PY_ARRAY                    (1)
 #define MICROPY_PY_ATTRTUPLE                (1)

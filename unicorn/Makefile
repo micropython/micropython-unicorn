@@ -42,6 +42,7 @@ LDFLAGS += --gc-sections
 SRC_C = \
 	main.c \
 	uart.c \
+	help.c \
 	lib/utils/stdout_helpers.c \
 	lib/utils/interrupt_char.c \
 	lib/utils/pyexec.c \
@@ -73,6 +74,9 @@ SRC_C = \
 	lib/libm/atanf.c \
 	lib/libm/atan2f.c \
 	lib/mp-readline/readline.c \
+
+# List of sources for qstr extraction
+SRC_QSTR += $(SRC_C)
 
 OBJ = $(PY_O) $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 
