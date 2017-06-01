@@ -1,9 +1,9 @@
 BUILD = build
-UNICORN_BUILD = ../unicorn/build
+UNICORN_BUILDS = ../unicorn/build_
 
 INDEX = index.html
 MP_UNICORN = mp_unicorn.js
-FIRMWARE = firmware.bin
+FIRMWARE = firmware_
 UNICORN_JS = unicorn-arm.min.js
 XTERM_JS = xterm.js
 XTERM_CSS = xterm.css
@@ -25,7 +25,8 @@ nogzip: $(BUILD) $(BUILD)/$(UNICORN_JS) $(BUILD)/$(XTERM_JS) $(BUILD)/$(XTERM_CS
 copy:
 	cp $(INDEX) $(BUILD)
 	cp $(MP_UNICORN) $(BUILD)
-	cp $(UNICORN_BUILD)/$(FIRMWARE) $(BUILD)
+	-cp $(UNICORN_BUILDS)minimal/$(FIRMWARE)minimal.bin $(BUILD)
+	-cp $(UNICORN_BUILDS)features/$(FIRMWARE)features.bin $(BUILD)
 
 $(BUILD):
 	mkdir $(BUILD)
