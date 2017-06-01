@@ -117,9 +117,7 @@ term.on('data', function (data) {
     execute();
 });
 
-var button = document.createElement("button");
-button.innerHTML = "Reset";
-document.body.appendChild(button);
+var button = document.getElementById("reset_button");
 button.addEventListener("click", function() {
     term.reset();
     term.focus();
