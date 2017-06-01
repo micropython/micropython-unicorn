@@ -7,6 +7,8 @@ FIRMWARE = firmware_
 UNICORN_JS = unicorn-arm.min.js
 XTERM_JS = xterm.js
 XTERM_CSS = xterm.css
+CODEMIRROR_JS = codemirror.js
+CODEMIRROR_CSS = codemirror.css
 
 # Using xterm.js release 2.6.0 and latest unicorn.js as no current release is functional
 XTERM_HASH = 2221f70ff05ba2af42ee0d26bed2f75dafe2d116
@@ -16,12 +18,12 @@ XTERM_CSS_LINK = https://raw.githubusercontent.com/sourcelair/xterm.js/$(XTERM_H
 
 all: gzip
 
-gzip: $(BUILD) $(BUILD)/$(UNICORN_JS).gz $(BUILD)/$(XTERM_JS).gz $(BUILD)/$(XTERM_CSS).gz copy
+gzip: $(BUILD) $(BUILD)/$(UNICORN_JS).gz $(BUILD)/$(XTERM_JS).gz $(BUILD)/$(XTERM_CSS).gz $(BUILD)/$(CODEMIRROR_JS).gz $(BUILD)/$(CODEMIRROR_CSS).gz copy
 	rm -f $(BUILD)/$(MP_UNICORN).gz
 	gzip $(BUILD)/$(MP_UNICORN)
 
 # Make clean before switching between gzip and nogzip builds
-nogzip: $(BUILD) $(BUILD)/$(UNICORN_JS) $(BUILD)/$(XTERM_JS) $(BUILD)/$(XTERM_CSS) copy
+nogzip: $(BUILD) $(BUILD)/$(UNICORN_JS) $(BUILD)/$(XTERM_JS) $(BUILD)/$(XTERM_CSS) $(BUILD)/$(CODEMIRROR_JS) $(BUILD)/$(CODEMIRROR_CSS) copy
 
 copy:
 	cp $(INDEX) $(BUILD)
@@ -52,6 +54,20 @@ $(BUILD)/$(XTERM_CSS):
 $(BUILD)/$(XTERM_CSS).gz:
 	wget -P $(BUILD) $(XTERM_CSS_LINK)
 	gzip $(BUILD)/$(XTERM_CSS)
+
+$(BUILD)/$(CODEMIRROR_JS):
+	cp $(CODEMIRROR_JS) $(BUILD)
+
+$(BUILD)/$(CODEMIRROR_JS).gz:
+	cp $(CODEMIRROR_JS) $(BUILD)
+	gzip $(BUILD)/$(CODEMIRROR_JS)
+
+$(BUILD)/$(CODEMIRROR_CSS):
+	cp $(CODEMIRROR_CSS) $(BUILD)
+
+$(BUILD)/$(CODEMIRROR_CSS).gz:
+	cp $(CODEMIRROR_CSS) $(BUILD)
+	gzip $(BUILD)/$(CODEMIRROR_CSS)
 
 .PHONY: clean
 
