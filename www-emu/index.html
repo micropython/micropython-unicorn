@@ -2,6 +2,7 @@
   <html>
     <head>
       <link rel="stylesheet" href="xterm.css" />
+      <link rel="stylesheet" href="codemirror.css" />
     </head>
     <body>
       <div id="terminal"></div>
@@ -27,10 +28,22 @@
         <select>
         <button type="button" id="reset_button">Reset</button>
       </p>
+      <p>
+        <button type="button" id="run_button">Run Script</button>
+        <textarea id="editor"></textarea>
+      </p>
       <script src="xterm.js"></script>
+      <script src="codemirror.js"></script>
       <script>
       	var term = new Terminal();
         term.open(document.getElementById('terminal'), true);
+      </script>
+      <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+          indentUnit: 4,
+          lineNumbers: true,
+          mode: "python"
+        });
       </script>
       <script src="unicorn-arm.min.js"></script>
       <script src="mp_unicorn.js"></script>

@@ -42,7 +42,11 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
 
 function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, user_data) {
     if (addr_lo == UART0_TXR) {
-        term.write(String.fromCharCode(value_lo));
+        if (in_script > 0) {
+            in_script--;
+        } else {
+            term.write(String.fromCharCode(value_lo));
+        }
     } else if (addr_lo == UNICORN_CONTROLLER_PENDING) {
         pending = value_lo;
     } else if (addr_lo == UNICORN_CONTROLLER_EXCEPTION) {
@@ -78,6 +82,7 @@ function continue_start() {
     timestamp = new Date();
     cycles = 0;
     waiting = false;
+    in_script = 0;
     ram_size = Number(document.getElementById("ram_size").value);
     stack_size = Number(document.getElementById("stack_size").value);
     sp = RAM_ADDRESS + ram_size;
@@ -105,7 +110,7 @@ function execute() {
     }
 }
 
-term.on('data', function (data) {
+function inject(data) {
     keypress = data.split("").reverse().map(function(i) { return i.charCodeAt() });
     waiting = false;
     ichr = emu.mem_read(ichr_addr, 4);
@@ -115,13 +120,29 @@ term.on('data', function (data) {
         next_char = next_char.concat(keypress);
     }
     execute();
+}
+
+term.on('data', function (data) {
+    inject(data);
 });
 
-var button = document.getElementById("reset_button");
-button.addEventListener("click", function() {
+var reset_button = document.getElementById("reset_button");
+reset_button.addEventListener("click", function() {
     term.reset();
     term.focus();
     start();
+});
+
+var run_button = document.getElementById("run_button");
+run_button.addEventListener("click", function() {
+    inject(String.fromCharCode(1));
+    inject(String.fromCharCode(4));
+    term.reset();
+    term.focus();
+    in_script = 2;
+    inject(editor.getValue());
+    inject(String.fromCharCode(4));
+    inject(String.fromCharCode(2));
 });
 
 gauge = setInterval(function() {
