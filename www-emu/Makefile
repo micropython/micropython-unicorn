@@ -17,6 +17,7 @@ XTERM_CSS_LINK = https://raw.githubusercontent.com/sourcelair/xterm.js/$(XTERM_H
 all: gzip
 
 gzip: $(BUILD) $(BUILD)/$(UNICORN_JS).gz $(BUILD)/$(XTERM_JS).gz $(BUILD)/$(XTERM_CSS).gz copy
+	rm -f $(BUILD)/$(MP_UNICORN).gz
 	gzip $(BUILD)/$(MP_UNICORN)
 
 # Make clean before switching between gzip and nogzip builds
@@ -34,19 +35,22 @@ $(BUILD):
 $(BUILD)/$(UNICORN_JS):
 	wget -P $(BUILD) $(UNICORN_JS_LINK)
 
-$(BUILD)/$(UNICORN_JS).gz: $(BUILD)/$(UNICORN_JS)
+$(BUILD)/$(UNICORN_JS).gz:
+	wget -P $(BUILD) $(UNICORN_JS_LINK)
 	gzip $(BUILD)/$(UNICORN_JS)
 
 $(BUILD)/$(XTERM_JS):
 	wget -P $(BUILD) $(XTERM_JS_LINK)
 
-$(BUILD)/$(XTERM_JS).gz: $(BUILD)/$(XTERM_JS)
+$(BUILD)/$(XTERM_JS).gz:
+	wget -P $(BUILD) $(XTERM_JS_LINK)
 	gzip $(BUILD)/$(XTERM_JS)
 
 $(BUILD)/$(XTERM_CSS):
 	wget -P $(BUILD) $(XTERM_CSS_LINK)
 
-$(BUILD)/$(XTERM_CSS).gz: $(BUILD)/$(XTERM_CSS)
+$(BUILD)/$(XTERM_CSS).gz:
+	wget -P $(BUILD) $(XTERM_CSS_LINK)
 	gzip $(BUILD)/$(XTERM_CSS)
 
 .PHONY: clean
