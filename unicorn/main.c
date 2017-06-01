@@ -22,12 +22,7 @@ typedef struct _unicorn_controller_t {
 
 #define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
 
-static char *stack_top;
-
 int main(int argc, char **argv) {
-    int stack_dummy;
-    stack_top = (char*)&stack_dummy;
-
     extern uint32_t _ebss;
     extern uint32_t _sdata;
 
@@ -61,7 +56,7 @@ void gc_collect(void) {
     // pointers from CPU registers, and thus may function incorrectly.
     void *dummy;
     gc_collect_start();
-    gc_collect_root(&dummy, ((mp_uint_t)stack_top - (mp_uint_t)&dummy) / sizeof(mp_uint_t));
+    gc_collect_root(&dummy, ((mp_uint_t)MP_STATE_THREAD(stack_top) - (mp_uint_t)&dummy) / sizeof(mp_uint_t));
     gc_collect_end();
 }
 
