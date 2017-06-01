@@ -5,6 +5,7 @@
 #include "py/nlr.h"
 #include "py/compile.h"
 #include "py/runtime.h"
+#include "py/stackctrl.h"
 #include "py/repl.h"
 #include "py/gc.h"
 #include "py/mperrno.h"
@@ -29,6 +30,11 @@ int main(int argc, char **argv) {
 
     extern uint32_t _ebss;
     extern uint32_t _sdata;
+
+    // Stack limit should be less than real stack size, so we have a chance
+    // to recover from limit hit.  (Limit is measured in bytes.)
+    mp_stack_set_top((uint8_t*)&_sdata + UNICORN_CONTROLLER->RAM_SIZE);
+    mp_stack_set_limit(UNICORN_CONTROLLER->STACK_SIZE - 1024);
 
     while (true) {
         gc_init(&_ebss, (uint8_t*)&_sdata + UNICORN_CONTROLLER->RAM_SIZE - UNICORN_CONTROLLER->STACK_SIZE);

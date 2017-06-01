@@ -6,6 +6,7 @@
 #define MICROPY_ALLOC_PATH_MAX      (256)
 #define MICROPY_ALLOC_PARSE_CHUNK_INIT (16)
 #define MICROPY_COMP_MODULE_CONST   (0)
+#define MICROPY_STACK_CHECK         (1)
 #define MICROPY_MEM_STATS           (0)
 #define MICROPY_DEBUG_PRINTERS      (0)
 #define MICROPY_ENABLE_GC           (1)
