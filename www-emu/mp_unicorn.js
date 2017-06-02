@@ -14,6 +14,8 @@ var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
 
 var CYCLE_LIMIT = 40000;
 
+var demos = new Map([["Hello World!", "print('hello world!')"], ["Big Integer", "# bignum\nprint(1 << 1000)"], ["Assembly", "# inline assembler\n@micropython.asm_thumb\ndef asm_add(r0, r1):\n    add(r0, r0, r1)\nprint(asm_add(1, 2))"]]);
+
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
 }
@@ -42,8 +44,10 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
 
 function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, user_data) {
     if (addr_lo == UART0_TXR) {
-        if (in_script > 0) {
-            in_script--;
+        if (prev_val == 4 && value_lo == 4 && in_script) {
+            block_output = 1;
+        } else if (block_output > 0) {
+            block_output--;
         } else {
             term.write(String.fromCharCode(value_lo));
         }
@@ -54,6 +58,7 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
     } else if (addr_lo == UNICORN_CONTROLLER_INTR_CHAR) {
         ichr_addr = value_lo;
     }
+    prev_val = value_lo;
     return;
 }
 
@@ -82,7 +87,9 @@ function continue_start() {
     timestamp = new Date();
     cycles = 0;
     waiting = false;
-    in_script = 0;
+    block_output = 0;
+    in_script = false;
+    prev_val = 0;
     ram_size = Number(document.getElementById("ram_size").value);
     stack_size = Number(document.getElementById("stack_size").value);
     sp = RAM_ADDRESS + ram_size;
@@ -135,14 +142,24 @@ reset_button.addEventListener("click", function() {
 
 var run_button = document.getElementById("run_button");
 run_button.addEventListener("click", function() {
+    if (editor.getValue() == "") return
     inject(String.fromCharCode(1));
     inject(String.fromCharCode(4));
     term.reset();
     term.focus();
-    in_script = 2;
+    block_output = 2;
+    in_script = true;
     inject(editor.getValue());
     inject(String.fromCharCode(4));
     inject(String.fromCharCode(2));
+});
+
+var demo_select = document.getElementById("demos");
+for (var [key, value] of demos) {
+    demo_select.add(new Option(key, value));
+}
+demo_select.addEventListener("click", function() {
+    editor.setValue(demo_select.value);
 });
 
 gauge = setInterval(function() {
