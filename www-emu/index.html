@@ -3,52 +3,106 @@
     <head>
       <link rel="stylesheet" href="xterm.css" />
       <link rel="stylesheet" href="codemirror.css" />
+      <link href="bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="mp_unicorn.css" />
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     </head>
     <body>
-      <div id="terminal"></div>
-      <p>Clock Speed <ins id="clock_speed"></ins> MHz</p>
-      <p>
-        Binary:
-        <select id="binary">
-          <option value="firmware_minimal.bin">Minimal</option>
-          <option value="firmware_features.bin" selected>Features</option>
-        <select>
-        Ram Size:
-        <select id="ram_size">
-          <option value=32768>32KB</option>
-          <option value=65536 selected>64KB</option>
-          <option value=131072>128KB</option>
-          <option value=262144>256KB</option>
-        <select>
-        Stack Size:
-        <select id="stack_size">
-          <option value=4096>4KB</option>
-          <option value=8192 selected>8KB</option>
-          <option value=16384>16KB</option>
-        <select>
-        <button type="button" id="reset_button">Reset</button>
-      </p>
-      <p>
-        <button type="button" id="run_button">Run Script</button>
-        <select id="demos">
-          <option value="">Choose a Demo...</option>
-        </select>
-      </p>
-      <textarea id="editor"></textarea>
-      <script src="xterm.js"></script>
-      <script src="codemirror.js"></script>
-      <script>
-      	var term = new Terminal();
-        term.open(document.getElementById('terminal'), true);
-      </script>
-      <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-          indentUnit: 4,
-          lineNumbers: true,
-          mode: "python"
-        });
-      </script>
-      <script src="unicorn-arm.min.js"></script>
-      <script src="mp_unicorn.js"></script>
+      <div class="navbar-container">
+        <nav class="navbar navbar-dark bg-inverse">
+          <a class="navbar-brand" href='http://micropython.org'>
+            <span>
+              <img src ="images/Mlogo_138wh.png" width="50px">
+            </span>
+            <span>
+              MicroPython
+            </span>
+          </a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://forum.micropython.org">FORUM</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://docs.micropython.org">DOCS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://docs.micropython.org/en/latest/pyboard/quickref.html"> QUICK-REF </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/download">DOWNLOAD</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/store">STORE</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">CONTACT</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div id="wrap">
+        <div id="col1">
+          <div id="terminal"></div>
+          <p>Clock Speed <ins id="clock_speed"></ins> MHz</p>
+          <p>
+            Binary:
+            <select id="binary">
+              <option value="firmware_minimal.bin">Minimal</option>
+              <option value="firmware_features.bin" selected>Features</option>
+            <select>
+            Ram Size:
+            <select id="ram_size">
+              <option value=32768>32KB</option>
+              <option value=65536 selected>64KB</option>
+              <option value=131072>128KB</option>
+              <option value=262144>256KB</option>
+            <select>
+            Stack Size:
+            <select id="stack_size">
+              <option value=4096>4KB</option>
+              <option value=8192 selected>8KB</option>
+              <option value=16384>16KB</option>
+            <select>
+            <button type="button" id="reset_button">Reset</button>
+          </p>
+        </div>
+        <div id="col2">
+          <div id="editor_div">
+            <textarea id="editor"></textarea>
+          </div>
+          <p>
+            <button type="button" id="run_button">Run Script</button>
+            <select id="demos"></select>
+          </p>
+          <div id="PYB">
+            <img id="base" src="images/PYB_base.png" />
+            <img id="red_led" src="images/PYB_red_LED.png" class="LED"/>
+            <img id="green_led" src="images/PYB_green_LED.png" class="LED" />
+            <img id="yellow_led" src="images/PYB_yellow_LED.png" class="LED" />
+            <img id="blue_led" src="images/PYB_blue_LED.png" class="LED" />
+          </div>
+        </div>
+        <script src="xterm.js"></script>
+        <script src="fit.js"></script>
+        <script src="codemirror.js"></script>
+        <script>
+          var term = new Terminal();
+          term.open(document.getElementById('terminal'), true);
+          term.fit();
+        </script>
+        <script>
+          var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            indentUnit: 4,
+            lineNumbers: true,
+            mode: "python"
+          });
+        </script>
+        <script src="unicorn-arm.min.js"></script>
+        <script src="mp_unicorn.js"></script>
+      </div>
     </body>
   </html>

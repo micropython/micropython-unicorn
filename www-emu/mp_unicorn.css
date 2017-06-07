@@ -1,0 +1,88 @@
+body {
+  font-size: 11pt;
+  margin: 0 0 0 0;
+}
+
+p {
+  margin: 0.5em auto;
+  font-family: Montserrat;
+}
+
+a, ins{
+  text-decoration: none;
+}
+
+#wrap {
+  width: 96vw;
+  margin: 2vw auto;
+}
+
+
+#col1 {
+  float: left;
+  width: 48vw
+}
+
+#col2 {
+  float: right;
+  width: 48vw;
+}
+
+#editor_div {
+  height: 50vh;
+}
+
+.CodeMirror {
+  height: 100%;
+}
+
+#terminal {
+  height: 50vh;
+  padding: 0;
+}
+
+#base {
+  height: 30vh;
+  position: absolute;
+  z-index: 0;
+  right: 10%;
+}
+
+.LED {
+  display: none;
+  height: 30vh;
+  position: absolute;
+  z-index: 1;
+  right: 10%;
+}
+
+.nav {
+  display: block;
+}
+
+.navbar-container {
+  padding-bottom: 1px;
+  background-color: #2b2728; }
+
+.navbar {
+  background-color: #2b2728;
+  font-family: 'Montserrat', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  width: 820px; }
+  .navbar a {
+    color: white; }
+    .navbar a:hover {
+      color: #d43738; }
+  .navbar .navbar-brand {
+    padding-top: 10px;
+    font-size: 18px;
+    font-weight: bold; }
+    .navbar .navbar-brand img {
+      vertical-align: middle; }
+  .navbar .navbar-nav {
+    float: right;
+    padding-top: 10px;
+    font-size: 12px;
+    font-weight: bold; }

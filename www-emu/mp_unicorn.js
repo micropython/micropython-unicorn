@@ -11,10 +11,11 @@ var UNICORN_CONTROLLER_EXCEPTION = 0x40000104;
 var UNICORN_CONTROLLER_INTR_CHAR = 0x40000108;
 var UNICORN_CONTROLLER_RAM_SIZE = 0x4000010c;
 var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
+var GPIO_ODR = 0x40000200;
 
 var CYCLE_LIMIT = 40000;
 
-var demos = new Map([["Hello World!", "print('hello world!')"], ["Big Integer", "# bignum\nprint(1 << 1000)"], ["Assembly", "# inline assembler\n@micropython.asm_thumb\ndef asm_add(r0, r1):\n    add(r0, r0, r1)\nprint(asm_add(1, 2))"]]);
+var demos = new Map([["Choose a Demo", "# Write a script, paste code or select an example!"], ["Hello World!", "print('hello world!')"], ["Big Integer", "# bignum\nprint(1 << 1000)"], ["Assembly", "# inline assembler\n@micropython.asm_thumb\ndef asm_add(r0, r1):\n    add(r0, r0, r1)\nprint(asm_add(1, 2))"], ["Activate LEDs", "# must be running featured binary\n# each bit represents an LED\nimport machine\nmachine.mem32[0x40000200] = 0b1111"]]);
 
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
@@ -57,12 +58,20 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         exception = int_to_bytes(value_lo);
     } else if (addr_lo == UNICORN_CONTROLLER_INTR_CHAR) {
         ichr_addr = value_lo;
+    } else if (addr_lo == GPIO_ODR) {
+        document.getElementById("red_led").style.display = ((value_lo & (1 << 0)) ? "inline" : "none");
+        document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
+        document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
+        document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
     }
     prev_val = value_lo;
     return;
 }
 
 function start() {
+    set_editor_height();
+    set_LEDs();
+
     binary = document.getElementById("binary").value;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', binary, true);
@@ -158,8 +167,27 @@ var demo_select = document.getElementById("demos");
 for (var [key, value] of demos) {
     demo_select.add(new Option(key, value));
 }
+editor.setValue(demo_select.value);
 demo_select.addEventListener("click", function() {
     editor.setValue(demo_select.value);
+});
+
+function set_LEDs() {
+    for (var led of ['red_led', 'green_led', 'yellow_led', 'blue_led']) {
+        var img = document.getElementById(led);
+        img.style.display = "none";
+    }
+}
+
+function set_editor_height(){
+    var editor_div = document.getElementById("editor_div");
+    var viewport = document.querySelector('.xterm-viewport');
+    editor_div.style.height = (parseFloat(viewport.style.lineHeight) * term.rows).toString() + "px";
+}
+
+window.addEventListener('resize', function() {
+    term.fit();
+    set_editor_height();
 });
 
 gauge = setInterval(function() {
