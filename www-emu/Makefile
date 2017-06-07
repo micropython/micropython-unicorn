@@ -37,6 +37,7 @@ copy:
 	cp -r $(IMAGES) $(BUILD)
 	-cp $(UNICORN_BUILDS)minimal/$(FIRMWARE)minimal.bin $(BUILD)
 	-cp $(UNICORN_BUILDS)features/$(FIRMWARE)features.bin $(BUILD)
+	-cp $(UNICORN_BUILDS)pyboard/$(FIRMWARE)pyboard.bin $(BUILD)
 
 $(BUILD):
 	mkdir $(BUILD)
