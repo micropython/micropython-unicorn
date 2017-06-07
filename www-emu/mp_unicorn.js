@@ -15,8 +15,6 @@ var GPIO_ODR = 0x40000200;
 
 var CYCLE_LIMIT = 40000;
 
-var demos = new Map([["Choose a Demo", "# Write a script, paste code or select an example!"], ["Hello World!", "print('hello world!')"], ["Big Integer", "# bignum\nprint(1 << 1000)"], ["Assembly", "# inline assembler\n@micropython.asm_thumb\ndef asm_add(r0, r1):\n    add(r0, r0, r1)\nprint(asm_add(1, 2))"], ["Activate LEDs", "# must be running featured binary\n# each bit represents an LED\nimport machine\nmachine.mem32[0x40000200] = 0b1111"]]);
-
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
 }
@@ -73,14 +71,16 @@ function start() {
     set_LEDs();
 
     binary = document.getElementById("binary").value;
+    demo_scripts = window[binary + "_demos"];
+    set_demos();
     var PYB = document.getElementById("PYB");
-    if (binary == "firmware_pyboard.bin") {
+    if (binary == "pyboard") {
         PYB.style.display = "inline";
     } else {
         PYB.style.display = "none";
     }
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', binary, true);
+    xhr.open('GET', "firmware_" + binary + ".bin", true);
     xhr.responseType = 'arraybuffer';
     xhr.onload = function (e) {
         firmware = new Uint8Array(this.response);
@@ -169,13 +169,19 @@ run_button.addEventListener("click", function() {
     inject(String.fromCharCode(2));
 });
 
-var demo_select = document.getElementById("demos");
-for (var [key, value] of demos) {
-    demo_select.add(new Option(key, value));
+
+function set_demos() {
+    for (var i = demos.options.length - 1; i >= 0; i--) {
+        demos.remove(i);
+    }
+    for (var [key, value] of demo_scripts) {
+        demos.add(new Option(key, value));
+    }
+    editor.setValue(demos.value);
 }
-editor.setValue(demo_select.value);
-demo_select.addEventListener("click", function() {
-    editor.setValue(demo_select.value);
+
+demos.addEventListener("click", function() {
+    editor.setValue(demos.value);
 });
 
 function set_LEDs() {

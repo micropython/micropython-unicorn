@@ -2,6 +2,12 @@ BUILD = build
 UNICORN_BUILDS = ../unicorn/build_
 IMAGES = images
 
+MINIMAL = minimal
+FEATURES = features
+PYBOARD = pyboard
+
+DEMO_GEN = demo_gen.py
+
 INDEX = index.html
 MP_UNICORN_JS = mp_unicorn.js
 MP_UNICORN_CSS = mp_unicorn.css
@@ -13,6 +19,7 @@ FIT_JS = fit.js
 CODEMIRROR_JS = codemirror.js
 CODEMIRROR_CSS = codemirror.css
 BOOTSTRAP_CSS = bootstrap.min.css
+DEMO_SCRIPTS = demo_scripts.js
 
 # Using xterm.js release 2.6.0 and latest unicorn.js as no current release is functional
 XTERM_HASH = 2221f70ff05ba2af42ee0d26bed2f75dafe2d116
@@ -35,9 +42,11 @@ copy:
 	cp $(MP_UNICORN_JS) $(BUILD)
 	cp $(MP_UNICORN_CSS) $(BUILD)
 	cp -r $(IMAGES) $(BUILD)
-	-cp $(UNICORN_BUILDS)minimal/$(FIRMWARE)minimal.bin $(BUILD)
-	-cp $(UNICORN_BUILDS)features/$(FIRMWARE)features.bin $(BUILD)
-	-cp $(UNICORN_BUILDS)pyboard/$(FIRMWARE)pyboard.bin $(BUILD)
+	-cp $(UNICORN_BUILDS)$(MINIMAL)/$(FIRMWARE)$(MINIMAL).bin $(BUILD)
+	-cp $(UNICORN_BUILDS)$(FEATURES)/$(FIRMWARE)$(FEATURES).bin $(BUILD)
+	-cp $(UNICORN_BUILDS)$(PYBOARD)/$(FIRMWARE)$(PYBOARD).bin $(BUILD)
+	python $(DEMO_GEN)
+	mv $(DEMO_SCRIPTS) $(BUILD)
 
 $(BUILD):
 	mkdir $(BUILD)
