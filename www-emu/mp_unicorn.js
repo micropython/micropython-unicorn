@@ -73,6 +73,12 @@ function start() {
     set_LEDs();
 
     binary = document.getElementById("binary").value;
+    var PYB = document.getElementById("PYB");
+    if (binary == "firmware_pyboard.bin") {
+        PYB.style.display = "inline";
+    } else {
+        PYB.style.display = "none";
+    }
     var xhr = new XMLHttpRequest();
     xhr.open('GET', binary, true);
     xhr.responseType = 'arraybuffer';
