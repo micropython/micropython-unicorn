@@ -19,7 +19,8 @@ FIT_JS = fit.js
 CODEMIRROR_JS = codemirror.js
 CODEMIRROR_CSS = codemirror.css
 BOOTSTRAP_CSS = bootstrap.min.css
-IMAGEMAPRESIZER_JS = imageMapResizer.min.js
+JQUERY_JS = jquery-3.2.1.min.js
+IMAGEMAPSTER_JS = jquery.imagemapster.min.js
 DEMO_SCRIPTS = demo_scripts.js
 
 # Using xterm.js release 2.6.0 and latest unicorn.js as no current release is functional
@@ -31,12 +32,12 @@ FIT_JS_LINK = https://raw.githubusercontent.com/sourcelair/xterm.js/$(XTERM_HASH
 
 all: gzip
 
-gzip: $(BUILD) $(BUILD)/$(UNICORN_JS).gz $(BUILD)/$(XTERM_JS).gz $(BUILD)/$(XTERM_CSS).gz $(BUILD)/$(FIT_JS).gz $(BUILD)/$(CODEMIRROR_JS).gz $(BUILD)/$(CODEMIRROR_CSS).gz $(BUILD)/$(BOOTSTRAP_CSS).gz $(BUILD)/$(IMAGEMAPRESIZER_JS).gz copy
+gzip: $(BUILD) $(BUILD)/$(UNICORN_JS).gz $(BUILD)/$(XTERM_JS).gz $(BUILD)/$(XTERM_CSS).gz $(BUILD)/$(FIT_JS).gz $(BUILD)/$(CODEMIRROR_JS).gz $(BUILD)/$(CODEMIRROR_CSS).gz $(BUILD)/$(BOOTSTRAP_CSS).gz $(BUILD)/$(JQUERY_JS).gz $(BUILD)/$(IMAGEMAPSTER_JS).gz copy
 	rm -f $(BUILD)/$(MP_UNICORN_JS).gz
 	gzip $(BUILD)/$(MP_UNICORN_JS)
 
 # Make clean before switching between gzip and nogzip builds
-nogzip: $(BUILD) $(BUILD)/$(UNICORN_JS) $(BUILD)/$(XTERM_JS) $(BUILD)/$(XTERM_CSS) $(BUILD)/$(FIT_JS) $(BUILD)/$(CODEMIRROR_JS) $(BUILD)/$(CODEMIRROR_CSS) $(BUILD)/$(BOOTSTRAP_CSS) $(BUILD)/$(IMAGEMAPRESIZER_JS) copy
+nogzip: $(BUILD) $(BUILD)/$(UNICORN_JS) $(BUILD)/$(XTERM_JS) $(BUILD)/$(XTERM_CSS) $(BUILD)/$(FIT_JS) $(BUILD)/$(CODEMIRROR_JS) $(BUILD)/$(CODEMIRROR_CSS) $(BUILD)/$(BOOTSTRAP_CSS) $(BUILD)/$(JQUERY_JS) $(BUILD)/$(IMAGEMAPSTER_JS) copy
 
 copy:
 	cp $(INDEX) $(BUILD)
@@ -101,12 +102,19 @@ $(BUILD)/$(BOOTSTRAP_CSS).gz:
 	cp $(BOOTSTRAP_CSS) $(BUILD)
 	gzip $(BUILD)/$(BOOTSTRAP_CSS)
 
-$(BUILD)/$(IMAGEMAPRESIZER_JS):
-	cp $(IMAGEMAPRESIZER_JS) $(BUILD)
+$(BUILD)/$(JQUERY_JS):
+	cp $(JQUERY_JS) $(BUILD)
 
-$(BUILD)/$(IMAGEMAPRESIZER_JS).gz:
-	cp $(IMAGEMAPRESIZER_JS) $(BUILD)
-	gzip $(BUILD)/$(IMAGEMAPRESIZER_JS)
+$(BUILD)/$(JQUERY_JS).gz:
+	cp $(JQUERY_JS) $(BUILD)
+	gzip $(BUILD)/$(JQUERY_JS)
+
+$(BUILD)/$(IMAGEMAPSTER_JS):
+	cp $(IMAGEMAPSTER_JS) $(BUILD)
+
+$(BUILD)/$(IMAGEMAPSTER_JS).gz:
+	cp $(IMAGEMAPSTER_JS) $(BUILD)
+	gzip $(BUILD)/$(IMAGEMAPSTER_JS)
 
 .PHONY: clean
 

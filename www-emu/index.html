@@ -87,11 +87,13 @@
             <img id="blue_led" src="images/PYB_blue_LED.png" class="PYB LED" />
             <img id="button_layer" src="images/PYB_button_layer.png" usemap="#PYB_map" class="PYB"/>
             <map name="PYB_map">
-              <area id="PYB_reset_button" shape="rect" coords="403,138,432,162" />
+              <area id="PYB_reset_button" shape="poly" coords="414,138,421,138,422,138,432,144,432,154,421,162,413,162,403,156,403,146" href="#" />
             </map>
           </div>
         </div>
         <script src="imageMapResizer.min.js"></script>
+        <script src="jquery-3.2.1.min.js"></script>
+        <script src="jquery.imagemapster.min.js"></script>
         <script src="xterm.js"></script>
         <script src="fit.js"></script>
         <script src="codemirror.js"></script>
@@ -104,7 +106,11 @@
             lineNumbers: true,
             mode: "python"
           });
-          imageMapResize();
+          $('#button_layer').mapster({
+            fillColor: 'ff0000',
+            fillOpacity: 0.5,
+            staticState: false,
+          });
         </script>
         <script src="unicorn-arm.min.js"></script>
         <script src="demo_scripts.js"></script>

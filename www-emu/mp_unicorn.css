@@ -41,11 +41,16 @@ a, ins{
   padding: 0;
 }
 
-.PYB {
-  height: 30vh;
+#PYB {
   position: absolute;
   right: 10%;
 }
+
+.PYB {
+  height: 30vh;
+  position: absolute;
+}
+
 #base {
   z-index: 0;
 }
