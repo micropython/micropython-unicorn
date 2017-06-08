@@ -12,9 +12,11 @@ var UNICORN_CONTROLLER_INTR_CHAR = 0x40000108;
 var UNICORN_CONTROLLER_RAM_SIZE = 0x4000010c;
 var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
 var GPIO_ODR = 0x40000200;
+var GPIO_IDR = 0x40000204;
 
 var CYCLE_LIMIT = 40000;
 var prev_binary = "";
+var user_button_state = 0;
 
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
@@ -38,6 +40,8 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(UNICORN_CONTROLLER_RAM_SIZE, int_to_bytes(ram_size));
     } else if (addr_lo == UNICORN_CONTROLLER_STACK_SIZE) {
         emu.mem_write(UNICORN_CONTROLLER_STACK_SIZE, int_to_bytes(stack_size));
+    } else if (addr_lo == GPIO_IDR) {
+        emu.mem_write(GPIO_IDR, int_to_bytes(user_button_state));
     }
     return;
 }
@@ -155,6 +159,12 @@ term.on('data', function (data) {
 
 reset_button.addEventListener("click", reset_emu);
 PYB_reset_button.addEventListener("click", reset_emu);
+PYB_user_button.addEventListener("mousedown", function() {
+    user_button_state = 1;
+});
+PYB_user_button.addEventListener("mouseup", function() {
+    user_button_state = 0;
+});
 
 function reset_emu() {
     term.reset();
