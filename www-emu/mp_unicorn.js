@@ -14,6 +14,7 @@ var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
 var GPIO_ODR = 0x40000200;
 
 var CYCLE_LIMIT = 40000;
+var prev_binary = "";
 
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
@@ -71,22 +72,26 @@ function start() {
     set_LEDs();
 
     binary = document.getElementById("binary").value;
-    demo_scripts = window[binary + "_demos"];
-    set_demos();
-    var PYB = document.getElementById("PYB");
-    if (binary == "pyboard") {
-        PYB.style.display = "inline";
-    } else {
+    if (binary != prev_binary) {
+        prev_binary = binary;
+        demo_scripts = window[binary + "_demos"];
+        set_demos();
+        if (binary == "pyboard") {
+            PYB.style.display = "inline";
+        } else {
         PYB.style.display = "none";
-    }
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', "firmware_" + binary + ".bin", true);
-    xhr.responseType = 'arraybuffer';
-    xhr.onload = function (e) {
-        firmware = new Uint8Array(this.response);
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "firmware_" + binary + ".bin", true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function (e) {
+            firmware = new Uint8Array(this.response);
+            continue_start();
+        }
+        xhr.send();
+    } else {
         continue_start();
     }
-    xhr.send();
 }
 
 function continue_start() {
@@ -148,12 +153,14 @@ term.on('data', function (data) {
     inject(data);
 });
 
-var reset_button = document.getElementById("reset_button");
-reset_button.addEventListener("click", function() {
+reset_button.addEventListener("click", reset_emu);
+PYB_reset_button.addEventListener("click", reset_emu);
+
+function reset_emu() {
     term.reset();
     term.focus();
     start();
-});
+}
 
 var run_button = document.getElementById("run_button");
 run_button.addEventListener("click", function() {

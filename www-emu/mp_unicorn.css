@@ -41,19 +41,22 @@ a, ins{
   padding: 0;
 }
 
-#base {
+.PYB {
   height: 30vh;
   position: absolute;
-  z-index: 0;
   right: 10%;
+}
+#base {
+  z-index: 0;
 }
 
 .LED {
   display: none;
-  height: 30vh;
-  position: absolute;
   z-index: 1;
-  right: 10%;
+}
+
+#button_layer {
+  z-index: 2;
 }
 
 .nav {

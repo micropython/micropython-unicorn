@@ -3,7 +3,7 @@
     <head>
       <link rel="stylesheet" href="xterm.css" />
       <link rel="stylesheet" href="codemirror.css" />
-      <link href="bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="bootstrap.min.css"/ >
       <link rel="stylesheet" href="mp_unicorn.css" />
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
@@ -80,13 +80,18 @@
             <select id="demos"></select>
           </p>
           <div id="PYB">
-            <img id="base" src="images/PYB_base.png" />
-            <img id="red_led" src="images/PYB_red_LED.png" class="LED"/>
-            <img id="green_led" src="images/PYB_green_LED.png" class="LED" />
-            <img id="yellow_led" src="images/PYB_yellow_LED.png" class="LED" />
-            <img id="blue_led" src="images/PYB_blue_LED.png" class="LED" />
+            <img id="base" src="images/PYB_base.png" class="PYB"/>
+            <img id="red_led" src="images/PYB_red_LED.png" class="PYB LED"/>
+            <img id="green_led" src="images/PYB_green_LED.png" class="PYB LED" />
+            <img id="yellow_led" src="images/PYB_yellow_LED.png" class="PYB LED" />
+            <img id="blue_led" src="images/PYB_blue_LED.png" class="PYB LED" />
+            <img id="button_layer" src="images/PYB_button_layer.png" usemap="#PYB_map" class="PYB"/>
+            <map name="PYB_map">
+              <area id="PYB_reset_button" shape="rect" coords="403,138,432,162" />
+            </map>
           </div>
         </div>
+        <script src="imageMapResizer.min.js"></script>
         <script src="xterm.js"></script>
         <script src="fit.js"></script>
         <script src="codemirror.js"></script>
@@ -94,13 +99,12 @@
           var term = new Terminal();
           term.open(document.getElementById('terminal'), true);
           term.fit();
-        </script>
-        <script>
           var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
             indentUnit: 4,
             lineNumbers: true,
             mode: "python"
           });
+          imageMapResize();
         </script>
         <script src="unicorn-arm.min.js"></script>
         <script src="demo_scripts.js"></script>
