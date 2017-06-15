@@ -177,6 +177,9 @@ run_button.addEventListener("click", function() {
     if (editor.getValue() == "") return
     inject(String.fromCharCode(1));
     inject(String.fromCharCode(4));
+    while (!waiting) {
+        execute();
+    }
     term.reset();
     term.focus();
     block_output = 2;
