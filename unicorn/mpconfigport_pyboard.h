@@ -28,8 +28,10 @@
 #define MICROPY_FLOAT_IMPL                  (MICROPY_FLOAT_IMPL_FLOAT)
 
 extern const struct _mp_obj_module_t mp_module_machine;
+extern const struct _mp_obj_module_t pyb_module;
 
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_ROM_QSTR(MP_QSTR_machine), MP_ROM_PTR(&mp_module_machine) }, \
+    { MP_ROM_QSTR(MP_QSTR_pyb), MP_ROM_PTR(&pyb_module) }, \
 
 #include "mpconfigport.h"
