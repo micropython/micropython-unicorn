@@ -37,16 +37,7 @@
 #include "py/mperrno.h"
 #include "lib/utils/interrupt_char.h"
 #include "lib/utils/pyexec.h"
-
-typedef struct _unicorn_controller_t {
-    volatile uint32_t PENDING;
-    volatile uint32_t EXCEPTION;
-    volatile uint32_t INTR_CHAR;
-    volatile uint32_t RAM_SIZE;
-    volatile uint32_t STACK_SIZE;
-} unicorn_controller_t;
-
-#define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
+#include "unicorn_mcu.h"
 
 void do_str(const char *src, mp_parse_input_kind_t input_kind) {
     nlr_buf_t nlr;
