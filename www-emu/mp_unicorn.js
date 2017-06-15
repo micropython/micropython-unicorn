@@ -197,7 +197,7 @@ function set_demos() {
     editor.setValue(demos.value);
 }
 
-demos.addEventListener("click", function() {
+demos.addEventListener("change", function() {
     editor.setValue(demos.value);
 });
 
