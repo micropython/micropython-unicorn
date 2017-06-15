@@ -22,6 +22,20 @@ typedef struct _unicorn_controller_t {
 
 #define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
 
+void do_str(const char *src, mp_parse_input_kind_t input_kind) {
+    nlr_buf_t nlr;
+    if (nlr_push(&nlr) == 0) {
+        mp_lexer_t *lex = mp_lexer_new_from_str_len(MP_QSTR__lt_stdin_gt_, src, strlen(src), 0);
+        mp_parse_tree_t parse_tree = mp_parse(lex, input_kind);
+        mp_obj_t module_fun = mp_compile(&parse_tree, MP_QSTR__lt_stdin_gt_, MP_EMIT_OPT_NONE, false);
+        mp_call_function_0(module_fun);
+        nlr_pop();
+    } else {
+        // uncaught exception
+        mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
+    }
+}
+
 int main(int argc, char **argv) {
     extern uint32_t _ebss;
     extern uint32_t _sdata;
@@ -34,6 +48,9 @@ int main(int argc, char **argv) {
     while (true) {
         gc_init(&_ebss, (uint8_t*)&_sdata + UNICORN_CONTROLLER->RAM_SIZE - UNICORN_CONTROLLER->STACK_SIZE);
         mp_init();
+
+        do_str("for i in range(1):pass", MP_PARSE_FILE_INPUT);
+
         for (;;) {
             if (pyexec_mode_kind == PYEXEC_MODE_RAW_REPL) {
                 if (pyexec_raw_repl() != 0) {
