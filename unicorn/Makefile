@@ -45,6 +45,7 @@ SRC_C = \
 	help.c \
 	modmachine.c \
 	modpyb.c \
+	pyb_led.c \
 	lib/utils/stdout_helpers.c \
 	lib/utils/interrupt_char.c \
 	lib/utils/pyexec.c \
