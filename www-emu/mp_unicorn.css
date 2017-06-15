@@ -1,11 +1,11 @@
 body {
   font-size: 11pt;
+  font-family: 'Open Sans';
   margin: 0 0 0 0;
 }
 
 p {
   margin: 0.5em auto;
-  font-family: Montserrat;
 }
 
 a, ins{
@@ -34,11 +34,16 @@ a, ins{
 
 .CodeMirror {
   height: 100%;
+  font-family: 'Droid Sans Mono', monospace;
 }
 
 #terminal {
   height: 50vh;
   padding: 0;
+}
+
+.terminal {
+  font-family: 'Droid Sans Mono', monospace;
 }
 
 #PYB {
