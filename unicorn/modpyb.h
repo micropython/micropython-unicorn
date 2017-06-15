@@ -35,3 +35,8 @@ void led_state(pyb_led_t led, int state);
 void led_toggle(pyb_led_t led);
 
 extern const mp_obj_type_t pyb_led_type;
+
+void switch_init0(void);
+int switch_get(void);
+
+extern const mp_obj_type_t pyb_switch_type;
