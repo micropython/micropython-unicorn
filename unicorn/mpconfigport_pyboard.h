@@ -24,14 +24,21 @@
 #define MICROPY_PY_COLLECTIONS              (1)
 #define MICROPY_PY_MATH                     (1)
 #define MICROPY_PY_MACHINE                  (1)
+#define MICROPY_PY_UTIME_MP_HAL             (1)
+#define MICROPY_MODULE_WEAK_LINKS           (1)
 #define MICROPY_LONGINT_IMPL                (MICROPY_LONGINT_IMPL_MPZ)
 #define MICROPY_FLOAT_IMPL                  (MICROPY_FLOAT_IMPL_FLOAT)
 
+extern const struct _mp_obj_module_t mp_module_utime;
 extern const struct _mp_obj_module_t mp_module_machine;
 extern const struct _mp_obj_module_t pyb_module;
 
 #define MICROPY_PORT_BUILTIN_MODULES \
+    { MP_ROM_QSTR(MP_QSTR_utime), MP_ROM_PTR(&mp_module_utime) }, \
     { MP_ROM_QSTR(MP_QSTR_machine), MP_ROM_PTR(&mp_module_machine) }, \
     { MP_ROM_QSTR(MP_QSTR_pyb), MP_ROM_PTR(&pyb_module) }, \
+
+#define MICROPY_PORT_BUILTIN_MODULE_WEAK_LINKS \
+    { MP_OBJ_NEW_QSTR(MP_QSTR_time), (mp_obj_t)&mp_module_utime }, \
 
 #include "mpconfigport.h"

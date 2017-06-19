@@ -24,27 +24,32 @@
  * THE SOFTWARE.
  */
 
-typedef struct _unicorn_controller_t {
-    volatile uint32_t PENDING;
-    volatile uint32_t EXCEPTION;
-    volatile uint32_t INTR_CHAR;
-    volatile uint32_t RAM_SIZE;
-    volatile uint32_t STACK_SIZE;
-    volatile uint32_t IDLE;
-} unicorn_controller_t;
+#include <stdio.h>
+#include <string.h>
 
-#define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
+#include "py/nlr.h"
+#include "py/smallint.h"
+#include "py/obj.h"
+#include "lib/timeutils/timeutils.h"
+#include "extmod/utime_mphal.h"
+#include "unicorn_mcu.h"
 
-typedef struct _gpio_t {
-    volatile uint32_t ODR;
-    volatile uint32_t IDR;
-} gpio_t;
+STATIC const mp_rom_map_elem_t time_module_globals_table[] = {
+    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_utime) },
 
-#define GPIO ((gpio_t*)0x40000200)
+    { MP_ROM_QSTR(MP_QSTR_sleep), MP_ROM_PTR(&mp_utime_sleep_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sleep_ms), MP_ROM_PTR(&mp_utime_sleep_ms_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sleep_us), MP_ROM_PTR(&mp_utime_sleep_us_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_ms), MP_ROM_PTR(&mp_utime_ticks_ms_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_us), MP_ROM_PTR(&mp_utime_ticks_us_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_cpu), MP_ROM_PTR(&mp_utime_ticks_cpu_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_add), MP_ROM_PTR(&mp_utime_ticks_add_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ticks_diff), MP_ROM_PTR(&mp_utime_ticks_diff_obj) },
+};
 
-typedef struct _rtc_t {
-    volatile uint32_t TICKS_MS;
-    volatile uint32_t TICKS_US;
-} rtc_t;
+STATIC MP_DEFINE_CONST_DICT(time_module_globals, time_module_globals_table);
 
-#define RTC ((rtc_t*)0x40000300)
+const mp_obj_module_t mp_module_utime = {
+    .base = { &mp_type_module },
+    .globals = (mp_obj_dict_t*)&time_module_globals,
+};

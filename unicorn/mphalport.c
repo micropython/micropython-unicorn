@@ -24,27 +24,33 @@
  * THE SOFTWARE.
  */
 
-typedef struct _unicorn_controller_t {
-    volatile uint32_t PENDING;
-    volatile uint32_t EXCEPTION;
-    volatile uint32_t INTR_CHAR;
-    volatile uint32_t RAM_SIZE;
-    volatile uint32_t STACK_SIZE;
-    volatile uint32_t IDLE;
-} unicorn_controller_t;
+#include <stdint.h>
+#include <stdio.h>
 
-#define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)
+#include "py/runtime.h"
+#include "unicorn_mcu.h"
+#include "mphalport.h"
 
-typedef struct _gpio_t {
-    volatile uint32_t ODR;
-    volatile uint32_t IDR;
-} gpio_t;
+void mp_hal_delay_ms(mp_uint_t ms) {
+    uint32_t start = mp_hal_ticks_ms();
+    extern void mp_handle_pending(void);
+    while (mp_hal_ticks_ms() - start < ms) {
+        mp_handle_pending();
+        UNICORN_CONTROLLER->IDLE = 1;
+    }
+}
 
-#define GPIO ((gpio_t*)0x40000200)
+void mp_hal_delay_us(mp_uint_t us) {
+    uint32_t start = mp_hal_ticks_us();
+    while (mp_hal_ticks_us() - start < us) {
+        mp_handle_pending();
+    }
+}
 
-typedef struct _rtc_t {
-    volatile uint32_t TICKS_MS;
-    volatile uint32_t TICKS_US;
-} rtc_t;
+mp_uint_t mp_hal_ticks_us(void) {
+    return RTC->TICKS_US;
+}
 
-#define RTC ((rtc_t*)0x40000300)
+mp_uint_t mp_hal_ticks_ms(void) {
+    return RTC->TICKS_MS;
+}
