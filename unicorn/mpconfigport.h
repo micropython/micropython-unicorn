@@ -18,7 +18,6 @@
 #define MICROPY_ENABLE_DOC_STRING   (0)
 #define MICROPY_PY_MICROPYTHON_MEM_INFO (1)
 #define MICROPY_PY___FILE__         (0)
-#define MICROPY_PY_CMATH            (0)
 #define MICROPY_PY_IO               (0)
 #define MICROPY_PY_STRUCT           (0)
 #define MICROPY_PY_SYS              (0)
