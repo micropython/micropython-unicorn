@@ -56,8 +56,14 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
 
 function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, user_data) {
     if (addr_lo == UART0_TXR) {
-        if (prev_val == 4 && value_lo == 4 && in_script) {
-            block_output = 1;
+        if (value_lo == 4 && in_script) {
+            if (in_error == true) {
+                block_output = 1;
+                in_error = false;
+                in_script = false;
+            } else {
+                in_error = true;
+            }
         } else if (block_output > 0) {
             block_output--;
         } else {
@@ -129,7 +135,7 @@ function continue_start() {
     waiting = false;
     block_output = 0;
     in_script = false;
-    prev_val = 0;
+    in_error = false;
     ram_size = Number(document.getElementById("ram_size").value);
     stack_size = Number(document.getElementById("stack_size").value);
     sp = RAM_ADDRESS + ram_size;
@@ -194,6 +200,7 @@ function reset_emu() {
 var run_button = document.getElementById("run_button");
 run_button.addEventListener("click", function() {
     if (editor.getValue() == "") return
+    inject(String.fromCharCode(3));
     inject(String.fromCharCode(1));
     inject(String.fromCharCode(4));
     while (!waiting) {
