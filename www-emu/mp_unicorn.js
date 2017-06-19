@@ -11,12 +11,16 @@ var UNICORN_CONTROLLER_EXCEPTION = 0x40000104;
 var UNICORN_CONTROLLER_INTR_CHAR = 0x40000108;
 var UNICORN_CONTROLLER_RAM_SIZE = 0x4000010c;
 var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
+var UNICORN_CONTROLLER_IDLE = 0x40000114;
 var GPIO_ODR = 0x40000200;
 var GPIO_IDR = 0x40000204;
+var RTC_TICKS_MS = 0x40000300;
+var RTC_TICKS_US = 0x40000304;
 
 var CYCLE_LIMIT = 40000;
 var prev_binary = "";
 var user_button_state = 0;
+var epoch;
 
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
@@ -42,6 +46,10 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(UNICORN_CONTROLLER_STACK_SIZE, int_to_bytes(stack_size));
     } else if (addr_lo == GPIO_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(user_button_state));
+    } else if (addr_lo == RTC_TICKS_MS) {
+        emu.mem_write(RTC_TICKS_MS, int_to_bytes(parseInt(window.performance.now() - epoch, 10)));
+    } else if (addr_lo == RTC_TICKS_US) {
+        emu.mem_write(RTC_TICKS_US, int_to_bytes(parseInt((window.performance.now() - epoch) * 1000, 10)));
     }
     return;
 }
@@ -61,6 +69,13 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         exception = int_to_bytes(value_lo);
     } else if (addr_lo == UNICORN_CONTROLLER_INTR_CHAR) {
         ichr_addr = value_lo;
+    } else if (addr_lo == UNICORN_CONTROLLER_IDLE) {
+        if (idle) {
+            idle = false;
+            emu.emu_stop();
+        } else {
+            idle = true;
+        }
     } else if (addr_lo == GPIO_ODR) {
         document.getElementById("red_led").style.display = ((value_lo & (1 << 0)) ? "inline" : "none");
         document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
@@ -110,6 +125,7 @@ function continue_start() {
     next_char = [];
     timestamp = new Date();
     cycles = 0;
+    idle = false;
     waiting = false;
     block_output = 0;
     in_script = false;
@@ -121,8 +137,11 @@ function continue_start() {
     emu.mem_write(FLASH_ADDRESS, firmware);
     emu.mem_write(FLASH_ADDRESS, int_to_bytes(sp));
 
-    emu.hook_add(uc.HOOK_MEM_WRITE, hook_write, null, PERIPHERAL_ADDRESS, PERIPHERAL_ADDRESS + PERIPHERAL_SIZE);
     emu.hook_add(uc.HOOK_MEM_READ, hook_read, null, PERIPHERAL_ADDRESS, PERIPHERAL_ADDRESS + PERIPHERAL_SIZE);
+    emu.hook_add(uc.HOOK_MEM_WRITE, hook_write, null, PERIPHERAL_ADDRESS, PERIPHERAL_ADDRESS + PERIPHERAL_SIZE);
+
+    epoch = window.performance.now();
+
     execute();
 }
 
