@@ -17,7 +17,7 @@ var GPIO_IDR = 0x40000204;
 var RTC_TICKS_MS = 0x40000300;
 var RTC_TICKS_US = 0x40000304;
 
-var CYCLE_LIMIT = 40000;
+var CYCLE_LIMIT = 39000;
 var prev_binary = "";
 var user_button_state = 0;
 var epoch;
