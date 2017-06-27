@@ -14,6 +14,10 @@ var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
 var UNICORN_CONTROLLER_IDLE = 0x40000114;
 var GPIO_ODR = 0x40000200;
 var GPIO_IDR = 0x40000204;
+var GPIO_X_ODR = 0x40000208;
+var GPIO_X_IDR = 0x4000020c;
+var GPIO_Y_ODR = 0x40000210;
+var GPIO_Y_IDR = 0x40000214;
 var RTC_TICKS_MS = 0x40000300;
 var RTC_TICKS_US = 0x40000304;
 
@@ -46,6 +50,10 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(UNICORN_CONTROLLER_STACK_SIZE, int_to_bytes(stack_size));
     } else if (addr_lo == GPIO_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(user_button_state));
+    } else if (addr_lo == GPIO_X_IDR) {
+        emu.mem_write(GPIO_IDR, int_to_bytes(0));
+    } else if (addr_lo == GPIO_Y_IDR) {
+        emu.mem_write(GPIO_IDR, int_to_bytes(0));
     } else if (addr_lo == RTC_TICKS_MS) {
         emu.mem_write(RTC_TICKS_MS, int_to_bytes(parseInt(window.performance.now() - epoch, 10)));
     } else if (addr_lo == RTC_TICKS_US) {
@@ -87,6 +95,8 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
         document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
         document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
+    } else if (addr_lo == GPIO_Y_ODR) {
+        document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
     }
     prev_val = value_lo;
     return;
