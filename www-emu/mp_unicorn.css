@@ -48,7 +48,8 @@ a, ins{
 
 #PYB {
   position: absolute;
-  right: 10%;
+  right: 0%;
+  bottom: 2%;
 }
 
 .PYB {
@@ -67,6 +68,10 @@ a, ins{
 
 #button_layer {
   z-index: 2;
+}
+
+.component {
+  display: none;
 }
 
 .nav {

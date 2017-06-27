@@ -248,6 +248,16 @@ window.addEventListener('resize', function() {
     set_editor_height();
 });
 
+window.onload = function() {
+    checkboxes = document.getElementsByClassName('components');
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener('change', function() {
+            component = document.getElementById(this.value);
+            component.style.display = this.checked ? "inline" : "none";
+        });
+    }
+}
+
 gauge = setInterval(function() {
     new_timestamp = new Date();
     if (!window.cycles) {
