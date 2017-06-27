@@ -41,6 +41,8 @@ typedef struct _gpio_t {
 } gpio_t;
 
 #define GPIO ((gpio_t*)0x40000200)
+#define GPIO_X ((gpio_t*)0x40000208)
+#define GPIO_Y ((gpio_t*)0x40000210)
 
 typedef struct _rtc_t {
     volatile uint32_t TICKS_MS;
