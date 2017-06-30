@@ -50,6 +50,8 @@ SRC_C = \
 	modpyb.c \
 	pyb_led.c \
 	pyb_switch.c \
+	pyb_servo.c \
+	pyb_adc.c \
 	lib/utils/stdout_helpers.c \
 	lib/utils/interrupt_char.c \
 	lib/utils/pyexec.c \

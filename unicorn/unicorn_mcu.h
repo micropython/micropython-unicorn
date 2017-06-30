@@ -24,6 +24,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef UNICORN_MCU
+#define UNICORN_MCU
+
 typedef struct _unicorn_controller_t {
     volatile uint32_t PENDING;
     volatile uint32_t EXCEPTION;
@@ -44,9 +47,25 @@ typedef struct _gpio_t {
 #define GPIO_X ((gpio_t*)0x40000208)
 #define GPIO_Y ((gpio_t*)0x40000210)
 
+typedef struct _servo_t {
+    volatile uint32_t ANGLE;
+    volatile uint32_t TIME;
+} servo_t;
+
+#define SERVO_1 ((servo_t*)0x40000218)
+
+typedef struct _adc_t {
+    volatile uint32_t IDR[12];
+} adc_t;
+
+#define ADC_X ((adc_t*)0x40000220)
+#define ADC_Y ((adc_t*)0x40000250)
+
 typedef struct _rtc_t {
     volatile uint32_t TICKS_MS;
     volatile uint32_t TICKS_US;
 } rtc_t;
 
 #define RTC ((rtc_t*)0x40000300)
+
+#endif
