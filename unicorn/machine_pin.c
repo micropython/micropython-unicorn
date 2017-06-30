@@ -28,14 +28,6 @@
 
 #include "py/runtime.h"
 #include "modmachine.h"
-#include "unicorn_mcu.h"
-
-typedef struct _machine_pin_obj_t {
-    mp_obj_base_t base;
-    qstr name;
-    gpio_t *port;
-    mp_uint_t pin;
-} machine_pin_obj_t;
 
 STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, MP_QSTR_X1, GPIO_X, 1},
@@ -76,16 +68,22 @@ STATIC const machine_pin_obj_t machine_pin_obj[] = {
     {{&machine_pin_type}, MP_QSTR_Y12, GPIO_Y, 12},
 };
 
+machine_pin_obj_t *machine_pin_get(mp_obj_t *obj_in) {
+    if (MP_OBJ_IS_TYPE(obj_in, &machine_pin_type)) {
+        return (machine_pin_obj_t*)obj_in;
+    }
+    mp_raise_TypeError("expecting a Pin");
+}
+
 void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_pin_obj_t *self = self_in;
-    mp_printf(print, "PIN(%q)", self->pin);
+    mp_printf(print, "PIN(%q)", self->name);
 }
 
 STATIC mp_obj_t machine_pin_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *args) {
     mp_arg_check_num(n_args, n_kw, 1, MP_OBJ_FUN_ARGS_MAX, true);
-    int i;
     qstr args0 = mp_obj_str_get_qstr(args[0]);
-    for (i = 0; i < MP_ARRAY_SIZE(machine_pin_obj); i++) {
+    for (int i = 0; i < MP_ARRAY_SIZE(machine_pin_obj); i++) {
         if (machine_pin_obj[i].name == args0) {
             return (mp_obj_t)&machine_pin_obj[i];
         }

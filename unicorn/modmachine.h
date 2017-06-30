@@ -24,4 +24,15 @@
  * THE SOFTWARE.
  */
 
+#include "unicorn_mcu.h"
+
+typedef struct _machine_pin_obj_t {
+    mp_obj_base_t base;
+    qstr name;
+    gpio_t *port;
+    mp_uint_t pin;
+} machine_pin_obj_t;
+
 extern const mp_obj_type_t machine_pin_type;
+
+machine_pin_obj_t *machine_pin_get(mp_obj_t *obj_in);
