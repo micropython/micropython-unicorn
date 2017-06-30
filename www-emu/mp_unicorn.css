@@ -12,6 +12,11 @@ a, ins{
   text-decoration: none;
 }
 
+input {
+  position: relative;
+  z-index: 3;
+}
+
 #wrap {
   width: 96vw;
   margin: 2vw auto;
@@ -46,15 +51,22 @@ a, ins{
   font-family: 'Droid Sans Mono', monospace;
 }
 
+#checkboxes {
+  float: left;
+}
+
 #PYB {
   position: absolute;
-  right: 0%;
+  right: 0;
   bottom: 2%;
+  float: right;
 }
 
 .PYB {
-  height: 30vh;
   position: absolute;
+  height: 30vh;
+  bottom: 0;
+  right: 0;
 }
 
 #base {
@@ -72,6 +84,19 @@ a, ins{
 
 .component {
   display: none;
+}
+
+#pin_servo_blade {
+  height: 15vh;
+  right: 11.95vh;
+  bottom: 0.89vh;
+}
+
+#adc_slider {
+  position: absolute;
+  bottom: 22.13vh;
+  right: 62.45vh;
+  width: 15vh;
 }
 
 .nav {

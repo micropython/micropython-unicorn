@@ -18,13 +18,21 @@ var GPIO_X_ODR = 0x40000208;
 var GPIO_X_IDR = 0x4000020c;
 var GPIO_Y_ODR = 0x40000210;
 var GPIO_Y_IDR = 0x40000214;
+var SERVO_1_ANGLE = 0x40000218;
+var SERVO_1_TIME = 0x4000021c;
+var ADC_X_IDR = 0x40000220;
+var ADC_Y_IDR = 0x40000250;
 var RTC_TICKS_MS = 0x40000300;
 var RTC_TICKS_US = 0x40000304;
 
-var CYCLE_LIMIT = 39000;
+var CYCLE_LIMIT = 390000;
 var prev_binary = "";
 var user_button_state = 0;
 var epoch;
+var servo_angle = 0;
+var servo_target = 0;
+var servo_speed = 1;
+var EPSILON = 0.5;
 
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
@@ -54,6 +62,14 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(GPIO_IDR, int_to_bytes(0));
     } else if (addr_lo == GPIO_Y_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(0));
+    } else if (addr_lo == SERVO_1_ANGLE) {
+        console.log(servo_angle);
+        emu.mem_write(SERVO_1_ANGLE, int_to_bytes(servo_angle));
+    } else if (addr_lo >= ADC_X_IDR && addr_lo < ADC_X_IDR + 0x30) {
+    } else if (addr_lo >= ADC_Y_IDR && addr_lo < ADC_Y_IDR + 0x30) {
+        if (addr_lo == ADC_Y_IDR + (3 * 4)) { //Pin Y4 connected to ADC slider
+            emu.mem_write(addr_lo, int_to_bytes(adc_slider.value));
+        }
     } else if (addr_lo == RTC_TICKS_MS) {
         emu.mem_write(RTC_TICKS_MS, int_to_bytes(parseInt(window.performance.now() - epoch, 10)));
     } else if (addr_lo == RTC_TICKS_US) {
@@ -97,6 +113,11 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
     } else if (addr_lo == GPIO_Y_ODR) {
         document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
+    } else if (addr_lo == SERVO_1_ANGLE) {
+        servo_target = value_lo;
+        rotate_servo();
+    } else if (addr_lo == SERVO_1_TIME) {
+        servo_speed = (Math.abs(servo_angle - servo_target) / (value_lo / 1000)) / 60;
     }
     prev_val = value_lo;
     return;
@@ -265,6 +286,22 @@ window.onload = function() {
             component = document.getElementById(this.value);
             component.style.display = this.checked ? "inline" : "none";
         });
+    }
+}
+
+function rotate_servo() {
+    if (servo_angle != servo_target) {
+        servo_angle += servo_angle < servo_target ? servo_speed : -servo_speed;
+        if (servo_angle > 90)
+            servo_angle = 90;
+        if (servo_angle < -90)
+            servo_angle = -90;
+        if (Math.abs(servo_angle - servo_target) < EPSILON)
+            servo_angle = servo_target;
+        pin_servo_blade.style.transform = "rotate(" + servo_angle.toString(10) + "deg)";
+        requestAnimationFrame(rotate_servo);
+    } else {
+        servo_speed = 1;
     }
 }
 

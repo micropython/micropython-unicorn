@@ -80,7 +80,11 @@
             <button type="button" id="run_button">Run Script</button>
             <select id="demos"></select>
           </p>
-          <input type="checkbox" value="pin_led" class="components">LED</br>
+          <div id="checkboxes">
+            <input type="checkbox" value="pin_led" class="components">LED</br>
+            <input type="checkbox" value="pin_servo" class="components">SERVO</br>
+            <input type="checkbox" value="pin_adc" class="components">ADC</br>
+          </div>
           <div id="PYB">
             <img id="base" src="images/PYB_base.png" class="PYB"/>
             <img id="red_led" src="images/PYB_red_LED.png" class="PYB LED"/>
@@ -91,6 +95,15 @@
               <img id="pin_led_base" src="images/PYB_PIN_LED_BASE.png" class="PYB" />
               <img id="pin_led_on" src="images/PYB_PIN_LED_ON.png" class="PYB LED" />
             </div>
+            <div id="pin_servo" class="component">
+              <img id="pin_servo_base" src="images/PYB_PIN_SERVO_BASE.png" class="PYB" />
+              <img id="pin_servo_blade" src="images/PYB_PIN_SERVO_BLADE.png" class="PYB" />
+            </div>
+            <div id="pin_adc" class="component">
+              <img id="pin_adc" src="images/PYB_PIN_ADC.png" class="PYB" />
+              <input type="range" id="adc_slider">
+            </div>
+            <!-- BUTTONS BREAK ON RESIZE -->
             <img id="button_layer" src="images/PYB_button_layer.png" usemap="#PYB_map" class="PYB"/>
             <map name="PYB_map">
               <area id="PYB_reset_button" shape="poly" coords="869,138,876,138,887,144,887,154,876,162,868,162,858,155,858,146" href="#" />
