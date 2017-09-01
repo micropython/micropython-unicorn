@@ -105,12 +105,13 @@ STATIC mp_obj_t machine_pin_on(mp_obj_t self_in) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(machine_pin_on_obj, machine_pin_on);
 
-STATIC mp_obj_t machine_pin_value(mp_uint_t nargs, const mp_obj_t *args) {
-    machine_pin_obj_t *self = args[0];
-    if (nargs <= 1) {
-        return MP_OBJ_NEW_SMALL_INT(self->port->IDR & (1 << self->pin));
+mp_obj_t machine_pin_call(mp_obj_t self_in, size_t n_args, size_t n_kw, const mp_obj_t *args) {
+    mp_arg_check_num(n_args, n_kw, 0, 1, false);
+    machine_pin_obj_t *self = self_in;
+    if (n_args <= 0) {
+        return MP_OBJ_NEW_SMALL_INT((self->port->IDR & (1 << self->pin)) ? 1 : 0);
     } else {
-        if (mp_obj_get_int(args[1]) == 0) {
+        if (mp_obj_get_int(args[0]) == 0) {
             self->port->ODR &= ~(1 << self->pin);
         } else {
             self->port->ODR |= (1 << self->pin);
@@ -118,12 +119,22 @@ STATIC mp_obj_t machine_pin_value(mp_uint_t nargs, const mp_obj_t *args) {
         return mp_const_none;
     }
 }
+
+STATIC mp_obj_t machine_pin_value(mp_uint_t n_args, const mp_obj_t *args) {
+    return machine_pin_call(args[0], n_args - 1, 0, args + 1);
+}
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(machine_pin_value_obj, 1, 2, machine_pin_value);
 
 STATIC const mp_rom_map_elem_t machine_pin_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_on), MP_ROM_PTR(&machine_pin_on_obj) },
     { MP_ROM_QSTR(MP_QSTR_off), MP_ROM_PTR(&machine_pin_off_obj) },
     { MP_ROM_QSTR(MP_QSTR_value), MP_ROM_PTR(&machine_pin_value_obj) },
+
+    { MP_ROM_QSTR(MP_QSTR_IN), MP_ROM_INT(0) },
+    { MP_ROM_QSTR(MP_QSTR_OUT), MP_ROM_INT(1) },
+    { MP_ROM_QSTR(MP_QSTR_PULL_UP), MP_ROM_INT(0) },
+    { MP_ROM_QSTR(MP_QSTR_PULL_DOWN), MP_ROM_INT(1) },
+    { MP_ROM_QSTR(MP_QSTR_PULL_NONE), MP_ROM_INT(0) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(machine_pin_locals_dict, machine_pin_locals_dict_table);
@@ -133,5 +144,6 @@ const mp_obj_type_t machine_pin_type = {
     .name = MP_QSTR_PIN,
     .print = machine_pin_print,
     .make_new = machine_pin_make_new,
+    .call = machine_pin_call,
     .locals_dict = (mp_obj_dict_t*)&machine_pin_locals_dict,
 };
