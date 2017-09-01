@@ -67,7 +67,7 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
     } else if (addr_lo >= ADC_X_IDR && addr_lo < ADC_X_IDR + 0x30) {
     } else if (addr_lo >= ADC_Y_IDR && addr_lo < ADC_Y_IDR + 0x30) {
         if (addr_lo == ADC_Y_IDR + (3 * 4)) { //Pin Y4 connected to ADC slider
-            emu.mem_write(addr_lo, int_to_bytes(adc_slider.value));
+            emu.mem_write(addr_lo, int_to_bytes((adc_slider.value * 255) / 100));
         }
     } else if (addr_lo == RTC_TICKS_MS) {
         emu.mem_write(RTC_TICKS_MS, int_to_bytes(parseInt(window.performance.now() - epoch, 10)));
