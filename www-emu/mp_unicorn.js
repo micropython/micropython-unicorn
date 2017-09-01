@@ -25,7 +25,7 @@ var ADC_Y_IDR = 0x40000250;
 var RTC_TICKS_MS = 0x40000300;
 var RTC_TICKS_US = 0x40000304;
 
-var CYCLE_LIMIT = 390000;
+var CYCLE_LIMIT = 50000;
 var prev_binary = "";
 var user_button_state = 0;
 var epoch;
