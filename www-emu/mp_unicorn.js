@@ -34,6 +34,9 @@ var servo_target = 0;
 var servo_speed = 1;
 var EPSILON = 0.5;
 
+var pins_x = 0;
+var pins_y = 0;
+
 function int_to_bytes(n) {
     return new Uint8Array([n, n >> 8, n >> 16, n >> 24]);
 }
@@ -59,9 +62,9 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
     } else if (addr_lo == GPIO_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(user_button_state));
     } else if (addr_lo == GPIO_X_IDR) {
-        emu.mem_write(GPIO_IDR, int_to_bytes(0));
+        emu.mem_write(GPIO_X_IDR, int_to_bytes(pins_x));
     } else if (addr_lo == GPIO_Y_IDR) {
-        emu.mem_write(GPIO_IDR, int_to_bytes(0));
+        emu.mem_write(GPIO_Y_IDR, int_to_bytes(pins_y));
     } else if (addr_lo == SERVO_1_ANGLE) {
         emu.mem_write(SERVO_1_ANGLE, int_to_bytes(servo_angle));
     } else if (addr_lo >= ADC_X_IDR && addr_lo < ADC_X_IDR + 0x30) {
@@ -106,11 +109,13 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
             idle = true;
         }
     } else if (addr_lo == GPIO_ODR) {
+        pins_x = value_lo;
         document.getElementById("red_led").style.display = ((value_lo & (1 << 0)) ? "inline" : "none");
         document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
         document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
         document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
     } else if (addr_lo == GPIO_Y_ODR) {
+        pins_y = value_lo;
         document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
     } else if (addr_lo == SERVO_1_ANGLE) {
         servo_target = value_lo;
