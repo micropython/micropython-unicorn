@@ -63,7 +63,6 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
     } else if (addr_lo == GPIO_Y_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(0));
     } else if (addr_lo == SERVO_1_ANGLE) {
-        console.log(servo_angle);
         emu.mem_write(SERVO_1_ANGLE, int_to_bytes(servo_angle));
     } else if (addr_lo >= ADC_X_IDR && addr_lo < ADC_X_IDR + 0x30) {
     } else if (addr_lo >= ADC_Y_IDR && addr_lo < ADC_Y_IDR + 0x30) {
@@ -205,7 +204,7 @@ function inject(data) {
     if (keypress[0] == ichr[0]) {
         emu.mem_write(pending, exception);
     } else {
-        next_char = next_char.concat(keypress);
+        next_char = keypress.concat(next_char);
     }
     execute();
 }
