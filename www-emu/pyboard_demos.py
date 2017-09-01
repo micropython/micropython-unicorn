@@ -68,3 +68,66 @@ print(math.log10(100))
 print(math.sin(12345) ** 2 + math.cos(12345) ** 2)
 print(math.cosh(1) ** 2 - math.sinh(1) ** 2)
 print(cmath.polar(1 + 1j))
+#####
+# Pin LED
+# Using a Pin with micropython
+# Make sure you have the LED checkbox marked!
+
+import machine
+
+# The LED is connected to our virtual pin Y12
+y12 = machine.Pin('Y12')
+
+y12(0 if y12() else 1)
+#####
+# ADC
+# Using the ADC (Analogue to Digital Converter)
+# Make sure you have the ADC checkbox marked!
+
+import machine
+import pyb
+
+# The slider is connected to pin Y4, try adjusting it
+y4 = machine.Pin('Y4')
+
+adc = pyb.ADC(y4)
+
+print(adc.read())
+#####
+# Using the Servo
+# Make sure you have the Servo checkbox marked!
+
+import machine
+import pyb
+
+# The pyboard has four simple servo connections
+servo = pyb.Servo(1)
+
+servo.angle(90, 5000)
+#####
+# Mandelbrot Set
+# A python Mandelbrot set courtesy of 
+# http://warp.povusers.org/MandScripts/python.html
+# Try your own Python3 scripts on MicroPython!
+
+minX = -2.0
+maxX = 1.0
+width = 60
+height = 28
+aspectRatio = 2
+
+chars = ' .,-:;i+hHM$*#@ '
+
+yScale = (maxX-minX)*(float(height)/width)*aspectRatio
+
+for y in range(height):
+    line = ''
+    for x in range(width):
+        c = complex(minX+x*(maxX-minX)/width, y*yScale/height-yScale/2)
+        z = c
+        for char in chars:
+            if abs(z) > 2:
+                break
+            z = z*z+c
+        line += char
+    print(line)
