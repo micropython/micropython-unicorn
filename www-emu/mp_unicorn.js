@@ -188,13 +188,14 @@ function execute() {
     }
     catch (er) {
         console.log(er, '\n');
-        return;
+        return 1;
     }
     cycles++;
     addr = emu.reg_read_i32(uc.ARM_REG_PC);
     if (!waiting) {
         requestAnimationFrame(execute);
     }
+    return 0;
 }
 
 function inject(data) {
@@ -235,7 +236,9 @@ run_button.addEventListener("click", function() {
     inject(String.fromCharCode(1));
     inject(String.fromCharCode(4));
     while (!waiting) {
-        execute();
+        if (execute()) {
+            return;
+        }
     }
     term.reset();
     term.focus();
