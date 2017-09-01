@@ -109,11 +109,12 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
             idle = true;
         }
     } else if (addr_lo == GPIO_ODR) {
-        pins_x = value_lo;
         document.getElementById("red_led").style.display = ((value_lo & (1 << 0)) ? "inline" : "none");
         document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
         document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
         document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
+    } else if (addr_lo == GPIO_X_ODR) {
+        pins_x = value_lo;
     } else if (addr_lo == GPIO_Y_ODR) {
         pins_y = value_lo;
         document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
