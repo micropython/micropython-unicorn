@@ -2,10 +2,6 @@ BUILD = build
 UNICORN_BUILDS = ../unicorn/build_
 IMAGES = images
 
-MINIMAL = minimal
-FEATURES = features
-PYBOARD = pyboard
-
 DEMO_GEN = demo_gen.py
 
 INDEX = index.html
@@ -44,9 +40,7 @@ copy:
 	cp $(MP_UNICORN_JS) $(BUILD)
 	cp $(MP_UNICORN_CSS) $(BUILD)
 	cp -r $(IMAGES) $(BUILD)
-	-cp $(UNICORN_BUILDS)$(MINIMAL)/$(FIRMWARE)$(MINIMAL).bin $(BUILD)
-	-cp $(UNICORN_BUILDS)$(FEATURES)/$(FIRMWARE)$(FEATURES).bin $(BUILD)
-	-cp $(UNICORN_BUILDS)$(PYBOARD)/$(FIRMWARE)$(PYBOARD).bin $(BUILD)
+	-cp $(UNICORN_BUILDS)*/$(FIRMWARE)*.bin $(BUILD)
 	python $(DEMO_GEN)
 	mv $(DEMO_SCRIPTS) $(BUILD)
 
