@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include "py/runtime.h"
-#include "stmhal/extint.h"
 #include "modpyb.h"
 #include "modmachine.h"
 #include "unicorn_mcu.h"
