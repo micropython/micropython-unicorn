@@ -94,6 +94,7 @@ adc = pyb.ADC(y4)
 
 print(adc.read())
 #####
+# Servo
 # Using the Servo
 # Make sure you have the Servo checkbox marked!
 
