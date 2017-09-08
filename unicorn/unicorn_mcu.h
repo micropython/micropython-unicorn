@@ -34,6 +34,7 @@ typedef struct _unicorn_controller_t {
     volatile uint32_t RAM_SIZE;
     volatile uint32_t STACK_SIZE;
     volatile uint32_t IDLE;
+    volatile uint32_t INSNS;
 } unicorn_controller_t;
 
 #define UNICORN_CONTROLLER ((unicorn_controller_t*)0x40000100)

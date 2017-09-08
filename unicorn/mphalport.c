@@ -54,3 +54,7 @@ mp_uint_t mp_hal_ticks_us(void) {
 mp_uint_t mp_hal_ticks_ms(void) {
     return RTC->TICKS_MS;
 }
+
+mp_uint_t mp_hal_ticks_cpu(void) {
+    return UNICORN_CONTROLLER->INSNS;
+}

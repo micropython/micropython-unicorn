@@ -12,6 +12,7 @@ var UNICORN_CONTROLLER_INTR_CHAR = 0x40000108;
 var UNICORN_CONTROLLER_RAM_SIZE = 0x4000010c;
 var UNICORN_CONTROLLER_STACK_SIZE = 0x40000110;
 var UNICORN_CONTROLLER_IDLE = 0x40000114;
+var UNICORN_CONTROLLER_INSNS = 0x40000118;
 var GPIO_ODR = 0x40000200;
 var GPIO_IDR = 0x40000204;
 var GPIO_X_ODR = 0x40000208;
@@ -33,6 +34,7 @@ var servo_angle = 0;
 var servo_target = 0;
 var servo_speed = 1;
 var EPSILON = 0.5;
+var TICK_INSN_RATIO = 2.5; // The approximate number of clock ticks per instruction found through experimentation
 
 var pins_x = 0;
 var pins_y = 0;
@@ -59,6 +61,8 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(UNICORN_CONTROLLER_RAM_SIZE, int_to_bytes(ram_size));
     } else if (addr_lo == UNICORN_CONTROLLER_STACK_SIZE) {
         emu.mem_write(UNICORN_CONTROLLER_STACK_SIZE, int_to_bytes(stack_size));
+    } else if (addr_lo == UNICORN_CONTROLLER_INSNS) {
+        emu.mem_write(UNICORN_CONTROLLER_INSNS, int_to_bytes(insns));
     } else if (addr_lo == GPIO_IDR) {
         emu.mem_write(GPIO_IDR, int_to_bytes(user_button_state));
     } else if (addr_lo == GPIO_X_IDR) {
@@ -167,6 +171,7 @@ function continue_start() {
     next_char = [];
     timestamp = new Date();
     cycles = 0;
+    insns = 0;
     idle = false;
     waiting = false;
     block_output = 0;
@@ -195,9 +200,10 @@ function execute() {
         console.log(er, '\n');
         return 1;
     }
-    cycles++;
     addr = emu.reg_read_i32(uc.ARM_REG_PC);
     if (!waiting) {
+        cycles++;
+        insns += CYCLE_LIMIT * TICK_INSN_RATIO;
         requestAnimationFrame(execute);
     }
     return 0;
@@ -318,7 +324,7 @@ gauge = setInterval(function() {
     if (!window.cycles) {
         speed = 0;
     } else {
-        speed = (cycles * CYCLE_LIMIT / 1000000) / ((new_timestamp - timestamp) / 1000);
+        speed = (cycles * CYCLE_LIMIT * TICK_INSN_RATIO / 1000000) / ((new_timestamp - timestamp) / 1000);
     }
     document.getElementById("clock_speed").innerHTML = speed.toFixed(2);
     timestamp = new_timestamp;
