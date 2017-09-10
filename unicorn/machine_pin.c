@@ -77,7 +77,7 @@ machine_pin_obj_t *machine_pin_get(mp_obj_t *obj_in) {
 
 void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_pin_obj_t *self = self_in;
-    mp_printf(print, "PIN(%q)", self->name);
+    mp_printf(print, "Pin(%q)", self->name);
 }
 
 STATIC mp_obj_t machine_pin_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *args) {
@@ -141,7 +141,7 @@ STATIC MP_DEFINE_CONST_DICT(machine_pin_locals_dict, machine_pin_locals_dict_tab
 
 const mp_obj_type_t machine_pin_type = {
     { &mp_type_type },
-    .name = MP_QSTR_PIN,
+    .name = MP_QSTR_Pin,
     .print = machine_pin_print,
     .make_new = machine_pin_make_new,
     .call = machine_pin_call,
