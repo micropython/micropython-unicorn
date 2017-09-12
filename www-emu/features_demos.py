@@ -1,12 +1,12 @@
-# Hello World!
+# HELLO WORLD!
 # hello world!
 print('hello world')
 #####
-# Big Integer
+# BIG INTEGER
 # bignum
 print(1 << 1000)
 #####
-# Assembly
+# ASSEMBLY
 # inline assembler
 @micropython.asm_thumb
 def asm_add(r0, r1):

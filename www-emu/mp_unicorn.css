@@ -2,19 +2,16 @@ body {
   font-size: 11pt;
   font-family: 'Open Sans';
   margin: 0 0 0 0;
+  line-height: 200%;
 }
 
 p {
-  margin: 0.5em auto;
+  display: inline-block;
+  margin: 0;
 }
 
 a, ins{
   text-decoration: none;
-}
-
-input {
-  position: relative;
-  z-index: 3;
 }
 
 #wrap {
@@ -33,7 +30,7 @@ input {
   width: 48vw;
 }
 
-#editor_div {
+#editor_wrap {
   height: 50vh;
 }
 
@@ -43,6 +40,7 @@ input {
 }
 
 #terminal {
+  line-height: 100%;
   height: 50vh;
   padding: 0;
 }
@@ -94,8 +92,8 @@ input {
 
 #adc_slider {
   position: absolute;
-  bottom: 22.13vh;
-  right: 62.45vh;
+  bottom: 22.30vh;
+  right: 62.15vh;
   width: 15vh;
 }
 
@@ -129,3 +127,107 @@ input {
     padding-top: 10px;
     font-size: 12px;
     font-weight: bold; }
+
+button, select {
+  position: relative;
+  z-index: 3;
+  line-height: normal;
+  height: 27px;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  padding: 5px 10px;
+  border: 0;
+  outline: 0;
+  margin: 10px 10px 0px 0px;
+}
+
+button:hover, select:hover {
+  filter: brightness(150%);
+}
+
+.red-element {
+  background-color: #ff6464;
+}
+
+.green-element {
+  background-color: #61ed61;
+}
+
+.blue-element {
+  background-color: #649fff;
+}
+
+input {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}
+
+input[type=checkbox] {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  padding: 4px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #ffd064;
+  outline: 0;
+  margin-right: 4px;
+  display: inline-block;
+  position: relative;
+}
+
+input[type=checkbox]:checked {
+  background-color: #ffd064;
+  padding: 6px;
+  border: 0;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 3vh;
+  width: 1vh;
+  border-radius: 0;
+  outline: 0;
+  border: 0;
+  background: #ff64ff;
+  margin-top: -1.1vh;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.7vh;
+  margin-top: -2.70vh;
+  background: #ff64ff;
+}
+
+input[type=range]::-moz-range-thumb {
+  -moz-appearance: none;
+  height: 3vh;
+  width: 1vh;
+  border-radius: 0;
+  outline: 0;
+  border: 0;
+  background: #ff64ff;
+}
+
+input[type=range]::-moz-range-track {
+  -moz-appearance: none;
+  width: 100%;
+  height: 0.7vh;
+  background: #ff64ff;
+}

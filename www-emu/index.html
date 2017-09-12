@@ -49,43 +49,50 @@
       <div id="wrap">
         <div id="col1">
           <div id="terminal"></div>
-          <p>Clock Speed <ins id="clock_speed"></ins> MHz</p>
           <p>
-            Binary:
-            <select id="binary">
-              <option value="minimal">Minimal</option>
-              <option value="features">Features</option>
-              <option value="pyboard" selected>Pyboard</option>
+            BINARY : &nbsp;
+            <select id="binary" class="blue-element">
+              <option value="minimal">MINIMAL</option>
+              <option value="features">FEATURES</option>
+              <option value="pyboard" selected>PYBOARD</option>
             <select>
-            Ram Size:
-            <select id="ram_size">
+            RAM : &nbsp;
+            <select id="ram_size" class="blue-element">
               <option value=32768>32KB</option>
               <option value=65536 selected>64KB</option>
               <option value=131072>128KB</option>
               <option value=262144>256KB</option>
-            <select>
-            Stack Size:
-            <select id="stack_size">
+            </select>
+            STACK : &nbsp;
+            <select id="stack_size" class="blue-element">
               <option value=4096>4KB</option>
               <option value=8192 selected>8KB</option>
               <option value=16384>16KB</option>
-            <select>
-            <button type="button" id="reset_button">Reset</button>
+            </select>
+            <button type="button" id="reset_button" class="red-element">RESET</button>
           </p>
-        </div>
-        <div id="col2">
-          <div id="editor_div">
-            <textarea id="editor"></textarea>
-          </div>
-          <p>
-            <button type="button" id="run_button">Run Script</button>
-            <select id="demos"></select>
-          </p>
+          <br />
+          <p>CLOCK SPEED <ins id="clock_speed"></ins> MHz</p>
+          <br />
+          <br />
+          <p>PERIPHERALS : </p>
+          <br />
           <div id="checkboxes">
             <input type="checkbox" value="pin_led" class="components">LED</br>
             <input type="checkbox" value="pin_servo" class="components">SERVO</br>
             <input type="checkbox" value="pin_adc" class="components">ADC</br>
           </div>
+        </div>
+        <div id="col2">
+          <div id="editor_wrap">
+            <div id="editor_div">
+              <textarea id="editor"></textarea>
+            </div>
+          </div>
+          <p>
+            <button type="button" id="run_button" class="green-element">RUN SCRIPT</button>
+            <select id="demos" class="green-element"></select>
+          </p>
           <div id="PYB">
             <img id="base" src="images/PYB_base.png" class="PYB"/>
             <img id="red_led" src="images/PYB_red_LED.png" class="PYB LED"/>

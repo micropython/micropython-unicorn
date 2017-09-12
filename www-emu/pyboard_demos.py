@@ -1,14 +1,14 @@
-# Hello World!
+# HELLO WORLD!
 # hello world!
 
 print('hello world')
 #####
-# Big Integer
+# BIG INTEGER
 # bignum
 
 print(1 << 1000)
 #####
-# Assembly
+# ASSEMBLY
 # inline assembler
 
 @micropython.asm_thumb
@@ -16,7 +16,7 @@ def asm_add(r0, r1):
     add(r0, r0, r1)
 print(asm_add(1, 2))
 #####
-# Switch
+# SWITCH
 # push the USR button on the pyboard to flash the LEDs!
 # try using the reset button on the pyboard to quit this script!
 # switch callback not yet supported.
@@ -32,7 +32,7 @@ while True:
     time.sleep_ms(50)
 
 #####
-# LEDs
+# LEDS
 # four LEDS numbered 1 to 4
 
 import time
@@ -42,7 +42,7 @@ for i in range(1000):
     pyb.LED((i%4) + 1).toggle()
     time.sleep_ms(100)
 #####
-# Time
+# TIME
 # the time module is utime, a specialized MicroPython library
 # sleep will break the clock speed
 # dates not yet supported
@@ -57,7 +57,7 @@ print(time.ticks_us())
 
 time.sleep_us(1000000)
 #####
-# Math
+# MATH
 # a subset of the Python Math library
 
 import math
@@ -69,7 +69,7 @@ print(math.sin(12345) ** 2 + math.cos(12345) ** 2)
 print(math.cosh(1) ** 2 - math.sinh(1) ** 2)
 print(cmath.polar(1 + 1j))
 #####
-# Pin LED
+# PIN LED
 # Using a Pin with micropython
 # Make sure you have the LED checkbox marked!
 
@@ -94,7 +94,7 @@ adc = pyb.ADC(y4)
 
 print(adc.read())
 #####
-# Servo
+# SERVO
 # Using the Servo
 # Make sure you have the Servo checkbox marked!
 
@@ -106,7 +106,7 @@ servo = pyb.Servo(1)
 
 servo.angle(90, 5000)
 #####
-# Mandelbrot Set
+# MANDELBROT SET
 # A python Mandelbrot set courtesy of 
 # http://warp.povusers.org/MandScripts/python.html
 # Try your own Python3 scripts on MicroPython!
