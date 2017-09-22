@@ -53,6 +53,10 @@ a, ins{
   float: left;
 }
 
+#checkbox_table {
+  width: 120%;
+}
+
 #PYB {
   position: absolute;
   right: 0;
@@ -95,6 +99,18 @@ a, ins{
   bottom: 22.30vh;
   right: 62.15vh;
   width: 15vh;
+}
+
+#lcd_unicorn {
+  position: absolute;
+  right: 56.15vh;
+  bottom: 2vh;
+  width: 256px;
+  height: 128px;
+  background: #354359;
+  border: 3px;
+  border-color: #171d26;
+  border-style: solid;
 }
 
 .nav {

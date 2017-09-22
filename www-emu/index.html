@@ -78,9 +78,18 @@
           <p>PERIPHERALS : </p>
           <br />
           <div id="checkboxes">
-            <input type="checkbox" value="pin_led" class="components">LED</br>
-            <input type="checkbox" value="pin_servo" class="components">SERVO</br>
-            <input type="checkbox" value="pin_adc" class="components">ADC</br>
+            <table id="checkbox_table">
+              <tr>
+                <td><input type="checkbox" value="pin_led" class="components">LED</br></td>
+                <td><input type="checkbox" value="i2c_lcd" class="components">I2C LCD</br></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" value="pin_servo" class="components">SERVO</br></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" value="pin_adc" class="components">ADC</br></td>
+              </tr>
+            </table>
           </div>
         </div>
         <div id="col2">
@@ -110,6 +119,9 @@
             <div id="pin_adc" class="component">
               <img id="pin_adc" src="images/PYB_PIN_ADC.png" class="PYB" />
               <input type="range" id="adc_slider">
+            </div>
+            <div id="i2c_lcd" class="component">
+              <canvas id="lcd_unicorn" width=256 height=128></canvas>
             </div>
             <!-- BUTTONS BREAK ON RESIZE -->
             <img id="button_layer" src="images/PYB_button_layer.png" usemap="#PYB_map" class="PYB"/>
