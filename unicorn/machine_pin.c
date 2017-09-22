@@ -75,6 +75,15 @@ machine_pin_obj_t *machine_pin_get(mp_obj_t *obj_in) {
     mp_raise_TypeError("expecting a Pin");
 }
 
+void pin_set(mp_obj_t self_in, int value) {
+    machine_pin_obj_t *self = self_in;
+    if (value) {
+        self->port->ODR |= (1 << self->pin);
+    } else {
+        self->port->ODR &= ~(1 << self->pin);
+    }
+}
+
 void machine_pin_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     machine_pin_obj_t *self = self_in;
     mp_printf(print, "Pin(%q)", self->name);
@@ -92,15 +101,13 @@ STATIC mp_obj_t machine_pin_make_new(const mp_obj_type_t *type, size_t n_args, s
 }
 
 STATIC mp_obj_t machine_pin_off(mp_obj_t self_in) {
-    machine_pin_obj_t *self = self_in;
-    self->port->ODR &= ~(1 << self->pin);
+    pin_set(self_in, 0);
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(machine_pin_off_obj, machine_pin_off);
 
 STATIC mp_obj_t machine_pin_on(mp_obj_t self_in) {
-    machine_pin_obj_t *self = self_in;
-    self->port->ODR |= (1 << self->pin);
+    pin_set(self_in, 1);
     return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(machine_pin_on_obj, machine_pin_on);
