@@ -143,7 +143,13 @@
           var editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
             indentUnit: 4,
             lineNumbers: true,
-            mode: "python"
+            mode: "python",
+            extraKeys: {
+              Tab: function(cm) {
+                var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                cm.replaceSelection(spaces);
+              }
+            }
           });
           $('#button_layer').mapster({
             fillColor: 'ff0000',
