@@ -113,6 +113,7 @@ servo.angle(90, 5000)
 # PERIPHERALS: i2c_lcd
 # A fully simulated I2C bus and LCD Display
 # The framebuf class simplifies graphics in MicroPython
+# Use the hardware i2c in example Pong for faster performance
 # Make sure you have the I2C LCD checkbox marked!
 
 import machine
@@ -164,3 +165,90 @@ for y in range(height):
             z = z*z+c
         line += char
     print(line)
+#####
+# Pong
+# PERIPHERALS: i2c_lcd pin_adc
+# Pong!
+# Using emulated hardware i2c, we can push enough frames for
+# rough animations. Performance for this project is reduced
+# using chromium.
+
+import machine
+import framebuf
+import time
+import pyb
+
+SCREEN_WIDTH = 64
+SCREEN_HEIGHT = 32
+
+game_over = False
+score = 0
+
+class Entity:
+    def __init__(self, x, y, w, h, vx, vy):
+        self.x = x;
+        self.y = y;
+        self.w = w;
+        self.h = h;
+        self.vx = vx;
+        self.vy = vy;
+
+    def draw(self, fbuf):
+        fbuf.fill_rect(int(self.x), int(self.y), self.w, self.h, 1)
+
+class Ball(Entity):
+    def update(self, dt, player):
+        self.x += self.vx * dt;
+        if (self.x <= 0):
+            self.x = 0
+            self.vx = -self.vx
+        if (self.x >= SCREEN_WIDTH - self.w):
+            self.x = SCREEN_WIDTH - self.w
+            self.vx = -self.vx
+        self.y += self.vy * dt;
+        if (self.y <= 0):
+            self.y = 0
+            self.vy = -self.vy
+        if (self.y >= SCREEN_HEIGHT - self.h - player.h):
+            if (self.x >= player.x and self.x <= player.x + player.w):
+                self.y = SCREEN_HEIGHT - self.h - player.h
+                self.vy = -self.vy
+                global score
+                score += 1
+                if score % 2 == 0:
+                    self.vx += (self.vx/abs(self.vx)) * 1
+                if score % 3 == 0:
+                    self.vy += (self.vy/abs(self.vy)) * 1
+            else:
+                global game_over
+                game_over = True
+
+class Player(Entity):
+    pass
+
+ball = Ball(32, 16, 1, 1, 2, -2)
+player = Player(30, 31, 10, 1, 0, 0)
+
+y4 = machine.Pin('Y4')
+adc = pyb.ADC(y4)
+i2c = machine.I2C('X')
+fbuf = framebuf.FrameBuffer(bytearray(64 * 32 // 8), 64, 32, framebuf.MONO_HLSB)
+tick = time.ticks_ms()
+
+while not game_over:
+    ntick = time.ticks_ms()
+    ball.update(time.ticks_diff(ntick, tick) // 100, player)
+    tick = ntick
+    player.x = adc.read() * 58 / 255
+    fbuf.fill(0)
+    ball.draw(fbuf)
+    player.draw(fbuf)
+    i2c.writeto(8, fbuf)
+    time.sleep_ms(20)
+
+fbuf.fill(0)
+fbuf.text('GAME', 15, 8)
+fbuf.text('OVER', 15, 18)
+i2c.writeto(8, fbuf)
+
+print('Score: ', score)
