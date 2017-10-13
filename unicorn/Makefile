@@ -47,6 +47,7 @@ SRC_C = \
 	modutime.c \
 	modmachine.c \
 	machine_pin.c \
+	machine_i2c.c \
 	modpyb.c \
 	pyb_led.c \
 	pyb_switch.c \

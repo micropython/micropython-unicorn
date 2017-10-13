@@ -40,4 +40,6 @@ extern const mp_obj_type_t machine_pin_type;
 machine_pin_obj_t *machine_pin_get(mp_obj_t *obj_in);
 void pin_set(mp_obj_t self_in, int value);
 
+extern const mp_obj_type_t machine_hard_i2c_type;
+
 #endif

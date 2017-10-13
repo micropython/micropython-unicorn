@@ -69,4 +69,11 @@ typedef struct _rtc_t {
 
 #define RTC ((rtc_t*)0x40000300)
 
+typedef struct _i2c_t {
+    volatile uint32_t DATA;
+    volatile uint32_t COMMAND; // (0) Start bit, (1) Stop bit
+} i2c_t;
+
+#define I2C ((i2c_t*)0x40000400)
+
 #endif
