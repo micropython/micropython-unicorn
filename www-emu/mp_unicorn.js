@@ -450,7 +450,17 @@ function set_demos() {
 }
 
 demos.addEventListener("change", function() {
-    editor.setValue(demos.value);
+    checkboxes = document.getElementsByClassName('components');
+    for (var i = 0; i < checkboxes.length; i++) {
+        var check = new Event('change');
+        checkboxes[i].checked = (demos.value.search(checkboxes[i].value) != -1) ? true : false;
+        checkboxes[i].dispatchEvent(check);
+    }
+    if (demos.value.search("# PERIPHERALS: ") != -1) {
+        editor.setValue(demos.value.slice(demos.value.search("\n") + 1));
+    } else {
+        editor.setValue(demos.value);
+    }
 });
 
 function set_LEDs() {

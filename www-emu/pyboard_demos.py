@@ -70,6 +70,7 @@ print(math.cosh(1) ** 2 - math.sinh(1) ** 2)
 print(cmath.polar(1 + 1j))
 #####
 # PIN LED
+# PERIPHERALS: pin_led
 # Using a Pin with micropython
 # Make sure you have the LED checkbox marked!
 
@@ -81,6 +82,7 @@ y12 = machine.Pin('Y12')
 y12(0 if y12() else 1)
 #####
 # ADC
+# PERIPHERALS: pin_adc
 # Using the ADC (Analogue to Digital Converter)
 # Make sure you have the ADC checkbox marked!
 
@@ -95,6 +97,7 @@ adc = pyb.ADC(y4)
 print(adc.read())
 #####
 # SERVO
+# PERIPHERALS: pin_servo
 # Using the Servo
 # Make sure you have the Servo checkbox marked!
 
@@ -107,6 +110,7 @@ servo = pyb.Servo(1)
 servo.angle(90, 5000)
 #####
 # I2C LCD
+# PERIPHERALS: i2c_lcd
 # A fully simulated I2C bus and LCD Display
 # The framebuf class simplifies graphics in MicroPython
 # Make sure you have the I2C LCD checkbox marked!
