@@ -25,6 +25,8 @@ var ADC_X_IDR = 0x40000220;
 var ADC_Y_IDR = 0x40000250;
 var RTC_TICKS_MS = 0x40000300;
 var RTC_TICKS_US = 0x40000304;
+var I2C_DATA = 0x40000400;
+var I2C_COMMAND = 0x40000404;
 
 var CYCLE_LIMIT = 50000;
 var prev_binary = "";
@@ -37,6 +39,8 @@ var LCD_WIDTH = 64;
 var LCD_HEIGHT = 32;
 var EPSILON = 0.5;
 var TICK_INSN_RATIO = 2.5; // The approximate number of clock ticks per instruction found through experimentation
+var HARD_I2C_SCL_X = 9
+var HARD_I2C_SDA_X = 10
 
 var pins_x = 0;
 var pins_y = 0;
@@ -65,16 +69,17 @@ class I2C {
         var nsda = extract_pin(val, this.sda_pin);
         if (nsda != sda) {
             if (scl) {
-                if (!nsda) {
+                if (!nsda) { // Start bit
                     this.active = true;
                     this.selected = false;
                     this.recv = 0;
                     this.data = 0;
                     this.buffer = [];
-                } else {
+                } else { // Stop bit
                     this.active = false;
                     if (this.selected) {
                         this.process();
+                        this.selected = false;
                     }
                 }
             }
@@ -85,7 +90,7 @@ class I2C {
                     this.data = (this.data << 1) + sda;
                     this.recv++;
                 } else {
-                    if (this.selected) {
+                    if (this.selected) { // Receive data
                         this.buffer.push(this.data);
                         this.send = 0;
                         this.data = 0;
@@ -110,7 +115,7 @@ class I2C {
         if (this.sda_gpio.name != GPIO || this.send == -1) {
             return pins;
         }
-        pins = pins & ~(1 << this.sda_pin) | (this.send << this.sda_pin);
+        pins = set_pin(pins, this.sda_pin, this.send);
         return pins;
     }
 
@@ -140,7 +145,30 @@ class LCD extends I2C {
     }
 }
 
-var i2c_devices = new Map([[8, new LCD(8, [X, 9], [X, 10])]])
+var i2c_devices = new Map([[8, new LCD(8, [X, HARD_I2C_SCL_X], [X, HARD_I2C_SDA_X])]])
+
+function write_to_i2c_devices(pins) {
+    // No X Y split?
+    for (var key of i2c_devices.keys()) {
+        i2c_devices.get(key).write(pins);
+    }
+}
+
+function set_pin(pins, pin_no, val) {
+    if (val) {
+        return pins | (1 << pin_no);
+    } else {
+        return pins & ~(1 << pin_no);
+    }
+}
+
+function hard_i2c_write(scl, sda) {
+    var pins = pins_x;
+    pins = set_pin(pins, HARD_I2C_SCL_X, scl);
+    pins = set_pin(pins, HARD_I2C_SDA_X, sda);
+    write_to_i2c_devices(pins);
+    pins_x = pins;
+}
 
 function extract_pin(pins, n) {
     return ((pins & (1 << n)) ? 1 : 0);
@@ -203,6 +231,12 @@ function hook_read(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, us
         emu.mem_write(RTC_TICKS_MS, int_to_bytes(parseInt(window.performance.now() - epoch, 10)));
     } else if (addr_lo == RTC_TICKS_US) {
         emu.mem_write(RTC_TICKS_US, int_to_bytes(parseInt((window.performance.now() - epoch) * 1000, 10)));
+    } else if (addr_lo == I2C_DATA) {
+        for (var key of i2c_devices.keys()) {
+            pins_x = i2c_devices.get(key).read('X', pins_x);
+        }
+        emu.mem_write(I2C_DATA, int_to_bytes(X(HARD_I2C_SDA_X)));
+        hard_i2c_write(0, X(HARD_I2C_SDA_X));
     }
     return;
 }
@@ -241,15 +275,11 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
         document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
     } else if (addr_lo == GPIO_X_ODR) {
-        for (var key of i2c_devices.keys()) {
-            i2c_devices.get(key).write(value_lo);
-        }
+        write_to_i2c_devices(value_lo);
         pins_x = value_lo;
         emu.mem_write(GPIO_X_IDR, int_to_bytes(pins_x));
     } else if (addr_lo == GPIO_Y_ODR) {
-        for (var key of i2c_devices.keys()) {
-            i2c_devices.get(key).write(value_lo);
-        }
+        write_to_i2c_devices(value_lo);
         pins_y = value_lo;
         emu.mem_write(GPIO_X_IDR, int_to_bytes(pins_y));
         document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
@@ -258,6 +288,23 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         rotate_servo();
     } else if (addr_lo == SERVO_1_TIME) {
         servo_speed = (Math.abs(servo_angle - servo_target) / (value_lo / 1000)) / 60;
+    } else if (addr_lo == I2C_DATA) {
+        for (var i = 7; i >= 0; i--) {
+            var j = (value_lo >> i) & 1;
+            for (var k = 0; k < 3; k++) {
+                hard_i2c_write(k % 2, j);
+            }
+        }
+        hard_i2c_write(0, 1);
+        hard_i2c_write(1, 1);
+    } else if (addr_lo == I2C_COMMAND) {
+        if (value_lo == 0) {
+            hard_i2c_write(1, 1);
+            hard_i2c_write(1, 0);
+        } else if (value_lo == 1) {
+            hard_i2c_write(1, 0);
+            hard_i2c_write(1, 1);
+        }
     }
     prev_val = value_lo;
     return;
