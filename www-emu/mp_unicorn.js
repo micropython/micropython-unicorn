@@ -270,10 +270,10 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
             idle = true;
         }
     } else if (addr_lo == GPIO_ODR) {
-        document.getElementById("red_led").style.display = ((value_lo & (1 << 0)) ? "inline" : "none");
-        document.getElementById("green_led").style.display = ((value_lo & (1 << 1)) ? "inline" : "none");
-        document.getElementById("yellow_led").style.display = ((value_lo & (1 << 2)) ? "inline" : "none");
-        document.getElementById("blue_led").style.display = ((value_lo & (1 << 3)) ? "inline" : "none");
+        document.getElementById("red_led").style.display = extract_pin(value_lo, 0) ? "inline" : "none";
+        document.getElementById("green_led").style.display = extract_pin(value_lo, 1) ? "inline" : "none";
+        document.getElementById("yellow_led").style.display = extract_pin(value_lo, 2) ? "inline" : "none";
+        document.getElementById("blue_led").style.display = extract_pin(value_lo, 3) ? "inline" : "none";
     } else if (addr_lo == GPIO_X_ODR) {
         write_to_i2c_devices(value_lo);
         pins_x = value_lo;
@@ -282,7 +282,7 @@ function hook_write(handle, type, addr_lo, addr_hi, size,  value_lo, value_hi, u
         write_to_i2c_devices(value_lo);
         pins_y = value_lo;
         emu.mem_write(GPIO_X_IDR, int_to_bytes(pins_y));
-        document.getElementById("pin_led_on").style.display = ((value_lo & (1 << 12)) ? "inline" : "none");
+        document.getElementById("pin_led_on").style.display = extract_pin(value_lo, 12) ? "inline" : "none";
     } else if (addr_lo == SERVO_1_ANGLE) {
         servo_target = value_lo;
         rotate_servo();
