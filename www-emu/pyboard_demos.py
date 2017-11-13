@@ -244,7 +244,7 @@ while not game_over:
     ball.draw(fbuf)
     player.draw(fbuf)
     i2c.writeto(8, fbuf)
-    time.sleep_ms(20)
+    time.sleep_ms(50) # Adjust this for performance boosts
 
 fbuf.fill(0)
 fbuf.text('GAME', 15, 8)
