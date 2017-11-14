@@ -157,6 +157,7 @@ button, select {
   font-size: 12px;
   padding: 5px 10px;
   border: 0;
+  border-radius: 0;
   outline: 0;
   margin: 10px 10px 0px 0px;
 }
