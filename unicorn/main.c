@@ -28,15 +28,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "py/nlr.h"
+#include "py/builtin.h"
 #include "py/compile.h"
 #include "py/runtime.h"
 #include "py/stackctrl.h"
 #include "py/repl.h"
 #include "py/gc.h"
 #include "py/mperrno.h"
-#include "lib/utils/interrupt_char.h"
-#include "lib/utils/pyexec.h"
+#include "shared/runtime/interrupt_char.h"
+#include "shared/runtime/pyexec.h"
 #include "unicorn_mcu.h"
 
 void do_str(const char *src, mp_parse_input_kind_t input_kind) {
@@ -44,7 +44,7 @@ void do_str(const char *src, mp_parse_input_kind_t input_kind) {
     if (nlr_push(&nlr) == 0) {
         mp_lexer_t *lex = mp_lexer_new_from_str_len(MP_QSTR__lt_stdin_gt_, src, strlen(src), 0);
         mp_parse_tree_t parse_tree = mp_parse(lex, input_kind);
-        mp_obj_t module_fun = mp_compile(&parse_tree, MP_QSTR__lt_stdin_gt_, MP_EMIT_OPT_NONE, false);
+        mp_obj_t module_fun = mp_compile(&parse_tree, MP_QSTR__lt_stdin_gt_, false);
         mp_call_function_0(module_fun);
         nlr_pop();
     } else {
@@ -140,7 +140,7 @@ void Reset_Handler(void) {
         *dest++ = 0;
     }
 
-    UNICORN_CONTROLLER->PENDING = (uint32_t) &MP_STATE_VM(mp_pending_exception);
+    UNICORN_CONTROLLER->PENDING = (uint32_t) &MP_STATE_MAIN_THREAD(mp_pending_exception);
     UNICORN_CONTROLLER->EXCEPTION = (uint32_t) &MP_STATE_VM(mp_kbd_exception);
     UNICORN_CONTROLLER->INTR_CHAR = (uint32_t) &mp_interrupt_char;
 

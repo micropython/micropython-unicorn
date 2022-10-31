@@ -26,7 +26,7 @@
 
 #include "py/builtin.h"
 
-const char *unicorn_help_text =
+const char unicorn_help_text[] =
 "Welcome to MicroPython running under Unicorn!\n"
 "\n"
 "Control commands:\n"

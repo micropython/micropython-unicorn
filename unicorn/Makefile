@@ -53,10 +53,13 @@ SRC_C = \
 	pyb_switch.c \
 	pyb_servo.c \
 	pyb_adc.c \
-	lib/utils/stdout_helpers.c \
-	lib/utils/interrupt_char.c \
-	lib/utils/pyexec.c \
-	lib/libc/string0.c \
+	shared/libc/string0.c \
+	shared/readline/readline.c \
+	shared/runtime/interrupt_char.c \
+	shared/runtime/pyexec.c \
+	shared/runtime/stdout_helpers.c \
+
+SRC_C += \
 	lib/libm/math.c \
 	lib/libm/fmodf.c \
 	lib/libm/nearbyintf.c \
@@ -83,7 +86,6 @@ SRC_C = \
 	lib/libm/asinfacosf.c \
 	lib/libm/atanf.c \
 	lib/libm/atan2f.c \
-	lib/mp-readline/readline.c \
 
 # List of sources for qstr extraction
 SRC_QSTR += $(SRC_C)

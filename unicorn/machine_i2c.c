@@ -7,19 +7,19 @@
 #include "extmod/machine_i2c.h"
 #include "unicorn_mcu.h"
 
-typedef struct _machine_hard_i2c_obj_t {
+typedef struct _machine_i2c_obj_t {
     mp_obj_base_t base;
-} machine_hard_i2c_obj_t;
+} machine_i2c_obj_t;
 
-STATIC const machine_hard_i2c_obj_t machine_hard_i2c_obj[] = {
-    {{&machine_hard_i2c_type}},
+STATIC const machine_i2c_obj_t machine_i2c_obj[] = {
+    {{&machine_i2c_type}},
 };
 
-void machine_hard_i2c_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
+STATIC void machine_i2c_print(const mp_print_t *print, mp_obj_t self_in, mp_print_kind_t kind) {
     mp_printf(print, "I2C(1, freq=unicorn, timeout=unicorn)");
 }
 
-mp_obj_t machine_hard_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
+STATIC mp_obj_t machine_i2c_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
     enum { ARG_id, ARG_scl, ARG_sda, ARG_freq, ARG_timeout };
     static const mp_arg_t allowed_args[] = {
         { MP_QSTR_id, MP_ARG_REQUIRED | MP_ARG_OBJ },
@@ -50,7 +50,7 @@ mp_obj_t machine_hard_i2c_make_new(const mp_obj_type_t *type, size_t n_args, siz
     }
 
     // get static peripheral object
-    machine_hard_i2c_obj_t *self = (machine_hard_i2c_obj_t*)&machine_hard_i2c_obj[i2c_id - 1];
+    machine_i2c_obj_t *self = (machine_i2c_obj_t*)&machine_i2c_obj[i2c_id - 1];
 
     // here we would check the scl/sda pins and configure them, but it's not implemented
     if (args[ARG_scl].u_obj != MP_OBJ_NULL || args[ARG_sda].u_obj != MP_OBJ_NULL) {
@@ -58,17 +58,17 @@ mp_obj_t machine_hard_i2c_make_new(const mp_obj_type_t *type, size_t n_args, siz
     }
 
     // initialise the I2C peripheral
-    //machine_hard_i2c_init(self, args[ARG_freq].u_int, args[ARG_timeout].u_int);
+    //machine_i2c_init(self, args[ARG_freq].u_int, args[ARG_timeout].u_int);
 
     return MP_OBJ_FROM_PTR(self);
 }
 
-int machine_hard_i2c_readfrom(mp_obj_base_t *self_in, uint16_t addr, uint8_t *dest, size_t len, bool stop) {
+STATIC int machine_i2c_readfrom(mp_obj_base_t *self_in, uint16_t addr, uint8_t *dest, size_t len, bool stop) {
     printf("READFROM\n");
     return 0;
 }
 
-int machine_hard_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_t *src, size_t len, bool stop) {
+STATIC int machine_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_t *src, size_t len, bool stop) {
 
     I2C->COMMAND = 0;
 
@@ -102,16 +102,24 @@ int machine_hard_i2c_writeto(mp_obj_base_t *self_in, uint16_t addr, const uint8_
     return num_acks;
 }
 
-STATIC const mp_machine_i2c_p_t machine_hard_i2c_p = {
-    .readfrom = machine_hard_i2c_readfrom,
-    .writeto = machine_hard_i2c_writeto,
+STATIC int machine_i2c_transfer_single(mp_obj_base_t *self_in, uint16_t addr, size_t len, uint8_t *buf, unsigned int flags) {
+    if (flags & MP_MACHINE_I2C_FLAG_READ) {
+        return machine_i2c_readfrom(self_in, addr, buf, len, flags & MP_MACHINE_I2C_FLAG_STOP);
+    } else {
+        return machine_i2c_writeto(self_in, addr, buf, len, flags & MP_MACHINE_I2C_FLAG_STOP);
+    }
+}
+
+STATIC const mp_machine_i2c_p_t machine_i2c_p = {
+    .transfer = mp_machine_i2c_transfer_adaptor,
+    .transfer_single = machine_i2c_transfer_single,
 };
 
-const mp_obj_type_t machine_hard_i2c_type = {
+const mp_obj_type_t machine_i2c_type = {
     { &mp_type_type },
     .name = MP_QSTR_I2C,
-    .print = machine_hard_i2c_print,
-    .make_new = machine_hard_i2c_make_new,
-    .protocol = &machine_hard_i2c_p,
-    .locals_dict = (mp_obj_dict_t*)&mp_machine_soft_i2c_locals_dict,
+    .print = machine_i2c_print,
+    .make_new = machine_i2c_make_new,
+    .protocol = &machine_i2c_p,
+    .locals_dict = (mp_obj_dict_t*)&mp_machine_i2c_locals_dict,
 };

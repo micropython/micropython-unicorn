@@ -8,7 +8,9 @@ mp_uint_t mp_hal_ticks_us(void);
 mp_uint_t mp_hal_ticks_cpu(void);
 void mp_hal_set_interrupt_char(int c);
 
+#define MP_HAL_PIN_FMT "%q"
 #define mp_hal_pin_obj_t const machine_pin_obj_t*
+#define mp_hal_pin_name(p) ((p)->name)
 #define mp_hal_pin_od_low(p) pin_set((mp_obj_t)p, 0)
 #define mp_hal_pin_od_high(p) pin_set((mp_obj_t)p, 1)
 #define mp_hal_get_pin_obj(o) machine_pin_get(o)

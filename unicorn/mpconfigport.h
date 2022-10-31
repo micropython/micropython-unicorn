@@ -47,6 +47,9 @@ typedef long mp_off_t;
 #define MICROPY_PORT_BUILTINS \
     { MP_OBJ_NEW_QSTR(MP_QSTR_open), (mp_obj_t)&mp_builtin_open_obj },
 
+// We need an implementation of the log2 function which is not a macro
+#define MP_NEED_LOG2 (1)
+
 // We need to provide a declaration/definition of alloca()
 #include <alloca.h>
 

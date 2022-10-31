@@ -30,9 +30,11 @@
 #include "py/nlr.h"
 #include "py/smallint.h"
 #include "py/obj.h"
-#include "lib/timeutils/timeutils.h"
+#include "shared/timeutils/timeutils.h"
 #include "extmod/utime_mphal.h"
 #include "unicorn_mcu.h"
+
+#if MICROPY_PY_UTIME_MP_HAL
 
 STATIC const mp_rom_map_elem_t time_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_utime) },
@@ -53,3 +55,7 @@ const mp_obj_module_t mp_module_utime = {
     .base = { &mp_type_module },
     .globals = (mp_obj_dict_t*)&time_module_globals,
 };
+
+MP_REGISTER_MODULE(MP_QSTR_utime, mp_module_utime);
+
+#endif // MICROPY_PY_UTIME_MP_HAL
