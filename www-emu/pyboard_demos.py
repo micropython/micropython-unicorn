@@ -119,9 +119,7 @@ servo.angle(90, 5000)
 import machine
 import framebuf
 
-scl = machine.Pin('X9')
-sda = machine.Pin('X10')
-i2c = machine.I2C(scl=scl, sda=sda)
+i2c = machine.I2C('X')
 
 fbuf = framebuf.FrameBuffer(bytearray(64 * 32 // 8), 64, 32, framebuf.MONO_HLSB)
 
